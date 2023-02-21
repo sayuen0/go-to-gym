@@ -6,6 +6,7 @@
 
 /bin/
 /vendor/
+/docs/
 
 .idea/
 .vscode/
