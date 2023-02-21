@@ -50,3 +50,31 @@ func makeCacheKey(cols boil.Columns, nzDefaults []string) string {
 	strmangle.PutBuffer(buf)
 	return str
 }
+
+type UsersAdmin string
+
+// Enum values for UsersAdmin
+const (
+	UsersAdmin0 UsersAdmin = "0"
+	UsersAdmin1 UsersAdmin = "1"
+)
+
+func AllUsersAdmin() []UsersAdmin {
+	return []UsersAdmin{
+		UsersAdmin0,
+		UsersAdmin1,
+	}
+}
+
+func (e UsersAdmin) IsValid() error {
+	switch e {
+	case UsersAdmin0, UsersAdmin1:
+		return nil
+	default:
+		return errors.New("enum is not valid")
+	}
+}
+
+func (e UsersAdmin) String() string {
+	return string(e)
+}

@@ -6,5 +6,5 @@ import (
 )
 
 type UseCase interface {
-	Register(ctx context.Context, user *models.User) (*models.UserWithToken, error)
+	Register(ctx context.Context, user *models.UserCreateRequest) (*models.UserWithToken, error)
 }

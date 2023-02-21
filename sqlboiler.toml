@@ -2,6 +2,7 @@ add-enum-type = true
 output = "internal/models/db"
 pkgname = "db"
 no-tests = true
+add-enum-types = true
 
 [mysql]
 dbname  = "go_to_gym"

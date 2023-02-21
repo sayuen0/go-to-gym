@@ -12,32 +12,29 @@ import (
 )
 
 type authUC struct {
-	cfg       *config.Config
-	lg        logger.Logger
-	authRepo  auth.Repository
-	redisRepo auth.RedisRepository
+	cfg      *config.Config
+	lg       logger.Logger
+	authRepo auth.Repository
 }
 
-func NewAuthUseCase(cfg *config.Config, lg logger.Logger, authRepo auth.Repository, redisRepo auth.RedisRepository) auth.UseCase {
-	return &authUC{cfg: cfg, lg: lg, authRepo: authRepo, redisRepo: redisRepo}
+func NewAuthUseCase(cfg *config.Config, lg logger.Logger, authRepo auth.Repository) auth.UseCase {
+	return &authUC{cfg: cfg, lg: lg, authRepo: authRepo}
 }
 
-func (a authUC) Register(ctx context.Context, user *models.User) (*models.UserWithToken, error) {
-	existsUser, err := u.authRepo.FindByEmail(ctx, user)
+func (u authUC) Register(ctx context.Context, req *models.UserCreateRequest) (*models.UserWithToken, error) {
+	existsUser, err := u.authRepo.FindByEmail(ctx, req.Email)
 	if existsUser != nil && err == nil {
 		return nil, http_errors.BadRequest(err)
 	}
 
-	if err := user.PrepareCreate(); err != nil {
+	if err := req.PrepareForCreate(); err != nil {
 		return nil, http_errors.BadRequest(errors.Wrap(err, "authUC.Register.PrepareCreate"))
 	}
 
-	createdUser, err := u.authRepo.Register(ctx, user)
+	createdUser, err := u.authRepo.Register(ctx, req)
 	if err != nil {
 		return nil, err
 	}
-	// TODO: 個々のUseCaseではやりたくない。レスポンス加工ミドルか何かで行いたい
-	createdUser.SanitizePassword()
 
 	token, err := utils.GenerateJWTToken(createdUser, u.cfg)
 	if err != nil {
@@ -47,6 +44,4 @@ func (a authUC) Register(ctx context.Context, user *models.User) (*models.UserWi
 		User:  createdUser,
 		Token: token,
 	}, nil
-
-	return nil, nil
 }

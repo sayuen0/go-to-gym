@@ -1,8 +1,16 @@
 # Go to Gym
 ## タスク
+
+- [ ] 実装
+  - [ ] auth.Register 認証できるところまで
 - [ ] 調査
     - [ ] https://github.com/fsouza/fake-gcs-server
 - [ ] Ginのミドルウェアの中で、パスワードを保持しているUserモデルレスポンスのパスワードを破棄して返すことをしたい(現状はUseCase各操作の中でサニタイズしており、実装がもれると危ない)
+  - [ ] というか出力オブジェクトを分けて、パスワードは保持しないで解決できる
+- [ ] viperにsecret定義を持たせないようにする
+- [ ] OpenAPI→Goという生成手順を踏む
+- [ ] 適切な権限管理
+  - [ ] マスタユーザ以外は、自分のデータ以外を編集することはできない
 
 ## 使用技術(バックエンド)
 - Webフレームワーク
@@ -10,7 +18,7 @@
 - DB
     - MySQL
 - OrMapper
-    - [Genericsを使いミスを防ぐSQL Builder「GenORM」](https://zenn.dev/mazrean/articles/c795c04e4837b4)
+    - SQLBoiler
 - KVS(Session)
     - Reds
 - DBMigration
@@ -21,7 +29,7 @@
 - DashBoard
     - Prometheus
 - ロギング
-    - ZapLogger
+    - Zap Logger
 - Gomock
 - Tester
     - Testify
@@ -33,12 +41,12 @@
 - https://grafana.com/
 
 ### その他やりたいこと
-- サーバはHTTPSで認証を必須とする
+- ~~サーバはHTTPSで認証を必須とする~~
 - デバッグAPIも標準で動作させる
     - 本番環境でも動作させるために、IPアドレス制限を設けるなどする
-- ファイルストレージの使い道としては、CSVのバッチ処理などすればいいと思った
+- ファイルストレージの使い道としては、CSVのバッチ処理などすればいい
     - バッチは別でインフラを立てる必要がある
-    - インフラに関しても定義は自分のソースコード内に置いとけばいいや
+    - インフラに関しても定義は自分のソースコード内に置いとけばいい
 
 ## 使用技術(フロントエンド)
 - 単体テスト

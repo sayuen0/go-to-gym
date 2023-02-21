@@ -6,5 +6,6 @@ import (
 )
 
 type Repository interface {
-	Register(ctx context.Context, user *models.User) (*models.User, error)
+	Register(ctx context.Context, user *models.UserCreateRequest) (*models.User, error)
+	FindByEmail(ctx context.Context, email string) (*models.User, error)
 }

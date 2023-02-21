@@ -12,11 +12,12 @@ type Config struct {
 }
 
 type ServerConfig struct {
-	AppVersion string
-	Port       string
-	SSL        bool
-	CSRF       bool
-	Debug      bool
+	AppVersion   string
+	Port         string
+	JwtSecretKey string
+	SSL          bool
+	CSRF         bool
+	Debug        bool
 }
 
 type DBConfig struct {

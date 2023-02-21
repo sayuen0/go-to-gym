@@ -1,6 +1,7 @@
 server:
     AppVersion: 1.0.0
     Port: :8080
+    JwtSecretKey: secretkey
     SSL: true
     CSRF: true
     Debug: false

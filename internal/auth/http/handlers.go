@@ -39,7 +39,7 @@ func (h *authHandlers) Register() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		ctx := c.Request.Context()
 
-		user := &models.User{}
+		user := &models.UserCreateRequest{}
 		if err := utils.ReadRequest(c, user); err != nil {
 			c.JSON(http_errors.ErrorResponse(err))
 			return
