@@ -4,3 +4,12 @@ server:
     SSL: true
     CSRF: true
     Debug: false
+db:
+    DBName: go_to_gym
+    User: root
+    Password: root
+    Addr:     "localhost:3306"
+    Net:      tcp
+    ParseTime: true
+    Collation: utf8mb4_general_ci
+    Location: Asia/Tokyo

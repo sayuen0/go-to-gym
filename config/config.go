@@ -7,7 +7,8 @@ import (
 )
 
 type Config struct {
-	Server ServerConfig
+	Server ServerConfig `viper:"server"`
+	DB     DBConfig     `viper:"db"`
 }
 
 type ServerConfig struct {
@@ -16,6 +17,17 @@ type ServerConfig struct {
 	SSL        bool
 	CSRF       bool
 	Debug      bool
+}
+
+type DBConfig struct {
+	DBName    string
+	User      string
+	Password  string
+	Addr      string
+	Net       string
+	ParseTime bool
+	Collation string
+	Location  string
 }
 
 func LoadConfig(filename string) (*viper.Viper, error) {

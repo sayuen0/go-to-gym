@@ -1,21 +1,27 @@
 package models
 
 import (
-	"github.com/google/uuid"
 	"golang.org/x/crypto/bcrypt"
 	"strings"
 	"time"
 )
 
+// TODO: create user create, update request
+// TODO: write validate tag
+
+// ---------------------------------------------------------------------------------------------------------------------
+// user get response
+
 type User struct {
-	UserID    uuid.UUID `json:"user_id"`
-	Name      string    `json:"name"`
-	Email     string    `json:"email"`
-	Password  string    `json:"password"`
-	Gender    *string   `json:"gender,omitempty"`
-	CreatedAt time.Time `json:"created_at"`
-	UpdatedAt time.Time `json:"updated_at"`
-	LoginDate time.Time `json:"login_date"`
+	UserID         string    `json:"user_id"`
+	Name           string    `json:"name"`
+	Email          string    `json:"email"`
+	Password       string    `json:"password"`
+	HashedPassword string    `json:"-"`
+	Gender         *string   `json:"gender,omitempty"`
+	CreatedAt      time.Time `json:"created_at"`
+	UpdatedAt      time.Time `json:"updated_at"`
+	LoginDate      time.Time `json:"login_date"`
 }
 
 func (u *User) HashPassword() error {
@@ -23,12 +29,12 @@ func (u *User) HashPassword() error {
 	if err != nil {
 		return err
 	}
-	u.Password = string(hashed)
+	u.HashedPassword = string(hashed)
 	return nil
 }
 
 func (u *User) ComparePasswords(password string) error {
-	if err := bcrypt.CompareHashAndPassword([]byte(u.Password), []byte(password)); err != nil {
+	if err := bcrypt.CompareHashAndPassword([]byte(u.HashedPassword), []byte(password)); err != nil {
 		return err
 	}
 	return nil

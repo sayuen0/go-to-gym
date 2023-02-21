@@ -45,7 +45,7 @@ func (h *authHandlers) Register() gin.HandlerFunc {
 			return
 		}
 
-		createUser, err := h.uc.Register(ctx, user)
+		createdUser, err := h.uc.Register(ctx, user)
 		if err != nil {
 			utils.LogResponseError(c, h.lg, err)
 			c.JSON(http_errors.ErrorResponse(err))
