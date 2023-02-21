@@ -1,0 +1,6 @@
+server:
+    AppVersion: 1.0.0
+    Port: :8080
+    SSL: true
+    CSRF: true
+    Debug: false

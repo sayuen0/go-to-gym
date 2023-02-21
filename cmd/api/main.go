@@ -1,17 +1,31 @@
 package main
 
 import (
-	"github.com/gin-gonic/gin"
-	"net/http"
+	"github.com/sayuen0/go-to-gym/config"
+	"github.com/sayuen0/go-to-gym/internal/infrastructure/logger"
+	"github.com/sayuen0/go-to-gym/internal/server"
+	"github.com/sayuen0/go-to-gym/pkg/utils"
+	"log"
 	"os"
 )
 
 func main() {
-	router := gin.Default()
-	router.GET("/", func(c *gin.Context) {
-		c.String(http.StatusOK, "Hello world")
-	})
-	crt := os.Getenv("SERVER_CRT")
-	key := os.Getenv("SERVER_KEY")
-	router.RunTLS(":8080", crt, key)
+	configPath := utils.GetConfigPath(os.Getenv("config"))
+	viperConfig, err := config.LoadConfig(configPath)
+	if err != nil {
+		log.Fatalf("LoadConfig: %v", err)
+	}
+	cfg, err := config.ParseConfig(viperConfig)
+	if err != nil {
+		log.Fatalf("ParseConfig: %v", err)
+	}
+	zl, err := logger.NewLogger()
+	if err != nil {
+		log.Fatalf("NewLogger: %v", err)
+	}
+
+	s := server.NewServer(cfg, zl)
+	if s.Run(); err != nil {
+		log.Fatal(err)
+	}
 }
