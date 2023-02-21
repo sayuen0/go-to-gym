@@ -1,0 +1,13 @@
+add-enum-type = true
+output = "internal/models/db"
+pkgname = "db"
+no-tests = true
+
+[mysql]
+dbname  = "go_to_gym"
+host    = "localhost"
+port    = 3306
+user    = "root"
+pass    = "root"
+sslmode = "false"
+blacklist = ["schema_migrations"]

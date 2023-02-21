@@ -15,6 +15,10 @@ migrate_up:
 migrate_down:
 	migrate -database 'mysql://root:root@tcp(127.0.0.1:3306)/go_to_gym' -path tools/db/migrate down 1
 
+
+boiler:
+	sqlboiler mysql
+
 # ==============================================================================
 # Tools commands
 
