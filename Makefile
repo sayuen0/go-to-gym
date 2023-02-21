@@ -1,6 +1,21 @@
 .PHONY: local swaggo test
 
 # ==============================================================================
+# Go migrate mysql
+
+force:
+	migrate -database 'mysql://root:root@tcp(127.0.0.1:3306)/go_to_gym' -path tools/db/migrate force 1
+
+version:
+	migrate -database 'mysql://root:root@tcp(127.0.0.1:3306)/go_to_gym' -path tools/db/migrate version
+
+migrate_up:
+	migrate -database 'mysql://root:root@tcp(127.0.0.1:3306)/go_to_gym' -path tools/db/migrate up 1
+
+migrate_down:
+	migrate -database 'mysql://root:root@tcp(127.0.0.1:3306)/go_to_gym' -path tools/db/migrate down 1
+
+# ==============================================================================
 # Tools commands
 
 swaggo:

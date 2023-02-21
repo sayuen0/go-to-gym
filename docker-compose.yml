@@ -1,9 +1,11 @@
 volumes:
   redis-volume:
   redis-gui-volume:
+  mysql-volume:
+  mysql-log-volume:
 networks:
   web_api:
-    driver: bridgeA
+    driver: bridge
 
 services:
 # ----------------------------------------------------------------------------------------------------------------------
@@ -15,6 +17,21 @@ services:
     volumes:
       - redis-volume:/data
     restart: always
+    networks:
+      - web_api
+  mysql:
+    image: mysql:8.0.27
+    platform: linux/amd64 # この行がないとM1 MacではPullできない
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql-volume:/var/lib/mysql
+      - mysql-log-volume:/var/log/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: go_to_gym
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
     networks:
       - web_api
 # ----------------------------------------------------------------------------------------------------------------------
