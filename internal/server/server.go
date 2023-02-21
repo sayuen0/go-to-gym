@@ -23,48 +23,46 @@ type Server interface {
 }
 
 type server struct {
-	gin    *gin.Engine
-	cfg    *config.Config
-	logger logger.Logger
+	gin *gin.Engine
+	cfg *config.Config
+	lg  logger.Logger
 }
 
 func NewServer(
 	cfg *config.Config, lg logger.Logger,
 ) Server {
 	r := gin.Default()
-	r.GET("/", func(c *gin.Context) {
-		c.String(http.StatusOK, "Hello world")
-	})
 	return &server{
-		gin:    r,
-		cfg:    cfg,
-		logger: lg,
+		gin: r,
+		cfg: cfg,
+		lg:  lg,
 	}
 }
 
 func (s *server) Run() error {
+	if err := s.Handle(s.gin); err != nil {
+		s.lg.Error("Handle error", logger.Error(err))
+	}
 	srv := &http.Server{
 		Addr:    s.cfg.Server.Port,
 		Handler: s.gin,
 	}
 	if s.cfg.Server.SSL {
-		// TODO: map handlers
 		// TODO: set read & write timeout
 
 		go func() {
-			s.logger.Info("Server is listening", logger.String("port", s.cfg.Server.Port))
+			s.lg.Info("TLS Server is listening", logger.String("port", s.cfg.Server.Port))
 			if err := srv.ListenAndServeTLS(_certFile, _keyFile); err != nil {
-				s.logger.Fatal("Error starting TLS server", logger.Error(err))
+				s.lg.Fatal("Error starting TLS server", logger.Error(err))
 			}
 		}()
 	} else {
-		// TODO: map handlers
 		// TODO: set read & write timeout
 
 		go func() {
-			s.logger.Info("Server is listening", logger.String("port", s.cfg.Server.Port))
+			s.lg.Info("Server is listening", logger.String("port", s.cfg.Server.Port))
 			if err := srv.ListenAndServe(); err != nil {
-				s.logger.Fatal("Error starting server", logger.Error(err))
+				s.lg.Fatal("Error starting server", logger.Error(err))
 			}
 		}()
 	}
@@ -76,6 +74,6 @@ func (s *server) Run() error {
 	<-quit
 	ctx, shutdown := context.WithTimeout(context.Background(), ctxTimeout*time.Second)
 	defer shutdown()
-	s.logger.Info("Server is Shutting down")
+	s.lg.Info("Server is Shutting down")
 	return srv.Shutdown(ctx)
 }
