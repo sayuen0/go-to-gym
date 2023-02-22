@@ -23,8 +23,8 @@ func CreateSessionCookie(c *gin.Context, cfg *config.Config, value string) {
 		cfg.Session.Name,
 		value,
 		cfg.Session.Expire,
-		"/",
-		"",
+		cfg.Cookie.Path,
+		cfg.Cookie.Domain,
 		cfg.Cookie.Secure,
 		cfg.Cookie.HTTPOnly,
 	)

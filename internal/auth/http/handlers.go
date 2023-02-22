@@ -157,9 +157,23 @@ func (h *authHandlers) Logout() gin.HandlerFunc {
 	}
 }
 
+// GetUsers godoc
+// @Summary Get users
+// @Description Get the list of all users
+// @Tags Auth
+// @Accept json
+// @Param page query int false "page number" Format(page)
+// @Param size query int false "number of elements per page" Format(size)
+// @Param orderBy query int false "filter name" Format(orderBy)
+// @Produce json
+// @Success 200 {object} models.UsersList
+// @Failure 500 {object} httpErrors.RestError
+// @Router /auth/all [get]
 func (h *authHandlers) GetUsers() gin.HandlerFunc {
-	//TODO implement me
-	panic("implement me")
+	return func(c *gin.Context) {
+		ctx := c.Request.Context()
+
+	}
 }
 
 func (h *authHandlers) GetUserByID() gin.HandlerFunc {

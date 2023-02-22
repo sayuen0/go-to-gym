@@ -53,6 +53,8 @@ type SessionConfig struct {
 type CookieConfig struct {
 	Name     string
 	MaxAge   int
+	Path     string
+	Domain   string
 	Secure   bool
 	HTTPOnly bool
 }
