@@ -1,4 +1,4 @@
-package http_errors
+package httperrors
 
 import (
 	"errors"
@@ -55,23 +55,28 @@ func NewRestErrorWithMessage(status int, err string, causes any) RestErr {
 	}
 }
 
+// BadRequest wraps causes with HTTP bad request error
 func BadRequest(causes any) RestErr {
 	return restErr{status: http.StatusBadRequest, error: errorBadRequest.Error(), causes: causes}
 }
 
+// Unauthorized wraps causes with HTTP unauthorized error
 func Unauthorized(causes any) RestErr {
 	return restErr{status: http.StatusUnauthorized, error: errorUnauthorized.Error(), causes: causes}
 }
 
+// NotFound wraps causes with HTTP not found error
 func NotFound(causes any) RestErr {
 	return restErr{status: http.StatusNotFound, error: errorNotFound.Error(), causes: causes}
 }
 
+// InternalServerError wraps causes with HTTP internal server error
 func InternalServerError(causes any) RestErr {
 	return restErr{status: http.StatusInternalServerError, error: errorInternalServerError.Error(), causes: causes}
 }
 
-func ParseErrors(err error) RestErr {
+// ParseError defines which kind of HTTP error err is
+func ParseError(err error) RestErr {
 	switch {
 	default:
 		if restErr, ok := err.(RestErr); ok {
@@ -83,6 +88,6 @@ func ParseErrors(err error) RestErr {
 
 // ErrorResponse returns error status and body
 func ErrorResponse(err error) (int, gin.H) {
-	e := ParseErrors(err)
+	e := ParseError(err)
 	return e.Status(), gin.H{"msg": e.Error()}
 }

@@ -24,6 +24,7 @@ func (u *UserCreateRequest) PrepareForCreate() error {
 	if err := u.HashPassword(); err != nil {
 		return err
 	}
+
 	return nil
 }
 
@@ -32,6 +33,7 @@ func (u *UserCreateRequest) HashPassword() error {
 	if err != nil {
 		return err
 	}
+
 	u.HashedPassword = string(hashed)
 	return nil
 }

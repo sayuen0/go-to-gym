@@ -8,7 +8,7 @@ import (
 	"github.com/sayuen0/go-to-gym/internal/infrastructure/logger"
 	"github.com/sayuen0/go-to-gym/internal/models"
 	"github.com/sayuen0/go-to-gym/internal/session"
-	"github.com/sayuen0/go-to-gym/pkg/http_errors"
+	"github.com/sayuen0/go-to-gym/pkg/httperrors"
 	"github.com/sayuen0/go-to-gym/pkg/utils"
 	"net/http"
 )
@@ -51,14 +51,14 @@ func (h *authHandlers) Register() gin.HandlerFunc {
 
 		user := &models.UserCreateRequest{}
 		if err := utils.ReadRequest(c, user); err != nil {
-			c.JSON(http_errors.ErrorResponse(err))
+			c.JSON(httperrors.ErrorResponse(err))
 			return
 		}
 
 		createdUser, err := h.uc.Register(ctx, user)
 		if err != nil {
 			utils.LogResponseError(c, h.lg, err)
-			c.JSON(http_errors.ErrorResponse(err))
+			c.JSON(httperrors.ErrorResponse(err))
 			return
 		}
 
@@ -67,7 +67,7 @@ func (h *authHandlers) Register() gin.HandlerFunc {
 			h.cfg.Session.Expire)
 		if err != nil {
 			utils.LogResponseError(c, h.lg, err)
-			c.JSON(http_errors.ErrorResponse(err))
+			c.JSON(httperrors.ErrorResponse(err))
 			return
 		}
 		utils.CreateSessionCookie(c, h.cfg, sess)
@@ -92,7 +92,7 @@ func (h *authHandlers) Login() gin.HandlerFunc {
 		login := &models.UserLoginRequest{}
 		if err := utils.ReadRequest(c, login); err != nil {
 			utils.LogResponseError(c, h.lg, err)
-			c.JSON(http_errors.ErrorResponse(err))
+			c.JSON(httperrors.ErrorResponse(err))
 			return
 		}
 
@@ -102,7 +102,7 @@ func (h *authHandlers) Login() gin.HandlerFunc {
 		})
 		if err != nil {
 			utils.LogResponseError(c, h.lg, err)
-			c.JSON(http_errors.ErrorResponse(err))
+			c.JSON(httperrors.ErrorResponse(err))
 			return
 		}
 
@@ -111,7 +111,7 @@ func (h *authHandlers) Login() gin.HandlerFunc {
 			h.cfg.Session.Expire)
 		if err != nil {
 			utils.LogResponseError(c, h.lg, err)
-			c.JSON(http_errors.ErrorResponse(err))
+			c.JSON(httperrors.ErrorResponse(err))
 			return
 		}
 		utils.CreateSessionCookie(c, h.cfg, sess)
@@ -137,17 +137,17 @@ func (h *authHandlers) Logout() gin.HandlerFunc {
 		sessionID, err := c.Cookie(h.cfg.Session.Name)
 		if err != nil {
 			if errors.Is(err, http.ErrNoCookie) {
-				c.JSON(http.StatusUnauthorized, http_errors.Unauthorized(err))
+				c.JSON(http.StatusUnauthorized, httperrors.Unauthorized(err))
 				return
 			}
 			utils.LogResponseError(c, h.lg, err)
-			c.JSON(http.StatusInternalServerError, http_errors.InternalServerError(err))
+			c.JSON(http.StatusInternalServerError, httperrors.InternalServerError(err))
 			return
 		}
 
 		if err := h.sessUC.DeleteByID(ctx, sessionID); err != nil {
 			utils.LogResponseError(c, h.lg, err)
-			c.JSON(http_errors.ErrorResponse(err))
+			c.JSON(httperrors.ErrorResponse(err))
 			return
 		}
 
@@ -175,14 +175,14 @@ func (h *authHandlers) GetUsers() gin.HandlerFunc {
 		paginationReq, err := utils.GetPaginationRequest(c)
 		if err != nil {
 			utils.LogResponseError(c, h.lg, err)
-			c.JSON(http_errors.ErrorResponse(err))
+			c.JSON(httperrors.ErrorResponse(err))
 			return
 		}
 
 		users, err := h.uc.GetUsers(ctx, paginationReq)
 		if err != nil {
 			utils.LogResponseError(c, h.lg, err)
-			c.JSON(http_errors.ErrorResponse(err))
+			c.JSON(httperrors.ErrorResponse(err))
 			return
 		}
 		c.JSON(http.StatusOK, users)

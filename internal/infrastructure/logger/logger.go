@@ -8,6 +8,7 @@ import (
 // ---------------------------------------------------------------------------------------------------------------------
 // Logger
 
+// Logger represents which can write log messages
 type Logger interface {
 	Debug(msg string, fields ...zap.Field)
 	Info(msg string, fields ...zap.Field)
@@ -20,6 +21,7 @@ type logger struct {
 	zl *zap.Logger
 }
 
+// NewLogger creates a new logger
 func NewLogger() (Logger, error) {
 	config := zap.Config{
 		Level:       zap.NewAtomicLevel(),
@@ -50,22 +52,27 @@ func NewLogger() (Logger, error) {
 // ---------------------------------------------------------------------------------------------------------------------
 // logging functions
 
+// Debug write a log message with DEBUG level
 func (l *logger) Debug(msg string, fields ...zap.Field) {
 	l.zl.Debug(msg, fields...)
 }
 
+// Info write a log message with INFO level
 func (l *logger) Info(msg string, fields ...zap.Field) {
 	l.zl.Info(msg, fields...)
 }
 
+// Warn write a log message with WARNING level
 func (l *logger) Warn(msg string, fields ...zap.Field) {
 	l.zl.Warn(msg, fields...)
 }
 
+// Error write a log message with ERROR level
 func (l *logger) Error(msg string, fields ...zap.Field) {
 	l.zl.Error(msg, fields...)
 }
 
+// Fatal write a log message with FATAL level
 func (l *logger) Fatal(msg string, fields ...zap.Field) {
 	l.zl.Fatal(msg, fields...)
 }
@@ -73,14 +80,17 @@ func (l *logger) Fatal(msg string, fields ...zap.Field) {
 // ---------------------------------------------------------------------------------------------------------------------
 // fields
 
+// Error returns zap.Error
 func Error(err error) zap.Field {
 	return zap.Error(err)
 }
 
+// String returns zap.String
 func String(key, val string) zap.Field {
 	return zap.String(key, val)
 }
 
+// Int returns zap.Int
 func Int(key string, val int) zap.Field {
 	return zap.Int(key, val)
 }

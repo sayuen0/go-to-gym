@@ -7,18 +7,21 @@ import (
 	"github.com/sayuen0/go-to-gym/internal/infrastructure/logger"
 )
 
-func GetIpAddress(c *gin.Context) string {
+// GetIPAddress returns requesters' remote IP address
+func GetIPAddress(c *gin.Context) string {
 	return c.RemoteIP()
 }
 
+// LogResponseError writes an error log to lg
 func LogResponseError(c *gin.Context, lg logger.Logger, err error) {
 	lg.Error("Error response with log",
 		// TODO: get request id
-		logger.String("ip_address", GetIpAddress(c)),
+		logger.String("ip_address", GetIPAddress(c)),
 		logger.Error(err),
 	)
 }
 
+// CreateSessionCookie creates a session to cookie
 func CreateSessionCookie(c *gin.Context, cfg *config.Config, value string) {
 	c.SetCookie(
 		cfg.Session.Name,
@@ -31,6 +34,7 @@ func CreateSessionCookie(c *gin.Context, cfg *config.Config, value string) {
 	)
 }
 
+// DeleteSessionCookie deletes the session from cookie
 func DeleteSessionCookie(c *gin.Context, cfg *config.Config) {
 	c.SetCookie(
 		cfg.Session.Name,
@@ -42,6 +46,7 @@ func DeleteSessionCookie(c *gin.Context, cfg *config.Config) {
 		true)
 }
 
+// ReadRequest reads http request body and validates it
 func ReadRequest(c *gin.Context, request any) error {
 	if err := c.Bind(request); err != nil {
 		return err
@@ -49,7 +54,7 @@ func ReadRequest(c *gin.Context, request any) error {
 	return ValidateStruct(c.Request.Context(), request)
 }
 
-// GetConfigPath return
+// GetConfigPath returns application configuration file path
 func GetConfigPath(configPath string) string {
 	// TODO: set by env
 	return "./config/config-local"

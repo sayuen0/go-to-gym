@@ -6,6 +6,7 @@ import (
 	"log"
 )
 
+// Config represents the configuration of whole application
 type Config struct {
 	Server  ServerConfig  `viper:"server"`
 	DB      DBConfig      `viper:"db"`
@@ -14,6 +15,7 @@ type Config struct {
 	Cookie  CookieConfig  `viper:"cookie"`
 }
 
+// ServerConfig represents the configuration of application server
 type ServerConfig struct {
 	AppVersion   string
 	Port         string
@@ -23,6 +25,7 @@ type ServerConfig struct {
 	Debug        bool
 }
 
+// DBConfig represents the configuration of DB connection
 type DBConfig struct {
 	DBName    string
 	User      string
@@ -35,6 +38,7 @@ type DBConfig struct {
 	Debug     bool
 }
 
+// RedisConfig represents the configuration of Redis connection
 type RedisConfig struct {
 	Addr         string
 	Password     string
@@ -45,12 +49,14 @@ type RedisConfig struct {
 	PoolTimeout  int
 }
 
+// SessionConfig represents the configuration of session
 type SessionConfig struct {
 	Prefix string
 	Name   string
 	Expire int
 }
 
+// CookieConfig represents the configuration of cookie
 type CookieConfig struct {
 	Name     string
 	MaxAge   int
@@ -60,6 +66,7 @@ type CookieConfig struct {
 	HTTPOnly bool
 }
 
+// LoadConfig reads file defined by filename and converts it to viper.Viper object
 func LoadConfig(filename string) (*viper.Viper, error) {
 	v := viper.New()
 
@@ -75,6 +82,7 @@ func LoadConfig(filename string) (*viper.Viper, error) {
 	return v, nil
 }
 
+// ParseConfig parses viper.Viper into a Config object
 func ParseConfig(v *viper.Viper) (*Config, error) {
 	var c Config
 	if err := v.Unmarshal(&c); err != nil {
