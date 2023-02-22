@@ -5,12 +5,32 @@ server:
     SSL: true
     CSRF: true
     Debug: false
+
 db:
     DBName: go_to_gym
     User: root
     Password: root
-    Addr:     "localhost:3306"
+    Addr:     localhost:3306
     Net:      tcp
     ParseTime: true
     Collation: utf8mb4_general_ci
     Location: Asia/Tokyo
+
+redis:
+    Addr: localhost:6379
+    MinIdleConns: 200
+    PoolSize: 12000
+    PoolTimeout: 240
+    Password: ""
+    DB: 0
+
+session:
+    Name: session-id
+    Prefix: api-session
+    Expire: 10800
+
+cookie:
+    Name: jwt-token
+    MaxAge: 86400
+    Secure: false
+    HttpOnly: true

@@ -2,6 +2,7 @@ package utils
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/sayuen0/go-to-gym/config"
 	"github.com/sayuen0/go-to-gym/internal/infrastructure/logger"
 )
 
@@ -17,12 +18,23 @@ func LogResponseError(c *gin.Context, lg logger.Logger, err error) {
 	)
 }
 
+func SetCookie(c *gin.Context, cfg *config.Config, value string) {
+	c.SetCookie(
+		cfg.Session.Name,
+		value,
+		cfg.Session.Expire,
+		"/",
+		"",
+		cfg.Cookie.Secure,
+		cfg.Cookie.HTTPOnly,
+	)
+}
+
 func ReadRequest(c *gin.Context, request any) error {
 	if err := c.Bind(request); err != nil {
 		return err
 	}
 	return ValidateStruct(c.Request.Context(), request)
-
 }
 
 func GetConfigPath(configPath string) string {

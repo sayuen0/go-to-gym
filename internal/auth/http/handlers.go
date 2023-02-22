@@ -6,6 +6,7 @@ import (
 	"github.com/sayuen0/go-to-gym/internal/auth"
 	"github.com/sayuen0/go-to-gym/internal/infrastructure/logger"
 	"github.com/sayuen0/go-to-gym/internal/models"
+	"github.com/sayuen0/go-to-gym/internal/session"
 	"github.com/sayuen0/go-to-gym/pkg/http_errors"
 	"github.com/sayuen0/go-to-gym/pkg/utils"
 	"net/http"
@@ -20,11 +21,16 @@ type authHandlers struct {
 
 func NewAuthHandlers(
 	cfg *config.Config,
+	lg logger.Logger,
 	uc auth.UseCase,
 	sessUc session.UseCase,
-	lg logger.Logger,
 ) auth.Handlers {
-	return &authHandlers{cfg: cfg, uc: uc, sessUC: sessUc, lg: lg}
+	return &authHandlers{
+		cfg:    cfg,
+		lg:     lg,
+		uc:     uc,
+		sessUC: sessUc,
+	}
 }
 
 // Register godoc
@@ -52,8 +58,12 @@ func (h *authHandlers) Register() gin.HandlerFunc {
 			return
 		}
 
-		sess, err := h.sessUC.
-			c.JSON(http.StatusCreated, createdUser)
+		sess, err := h.sessUC.CreateSession(ctx,
+			&models.Session{UserID: createdUser.User.UserID},
+			h.cfg.Session.Expire)
+		utils.SetCookie(c, h.cfg, sess)
+
+		c.JSON(http.StatusCreated, createdUser)
 		return
 	}
 }

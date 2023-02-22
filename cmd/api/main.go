@@ -4,6 +4,8 @@ import (
 	"github.com/sayuen0/go-to-gym/config"
 	"github.com/sayuen0/go-to-gym/internal/infrastructure/logger"
 	"github.com/sayuen0/go-to-gym/internal/server"
+	"github.com/sayuen0/go-to-gym/pkg/db/mysql"
+	"github.com/sayuen0/go-to-gym/pkg/db/redis"
 	"github.com/sayuen0/go-to-gym/pkg/utils"
 	"log"
 	"os"
@@ -24,7 +26,13 @@ func main() {
 		log.Fatalf("NewLogger: %v", err)
 	}
 
-	s := server.NewServer(cfg, zl)
+	db := mysql.GetConnection(cfg)
+	defer db.Close()
+
+	redisClient := redis.NewRedisClient(cfg)
+	defer redisClient.Close()
+
+	s := server.NewServer(cfg, zl, db, redisClient)
 	if s.Run(); err != nil {
 		log.Fatal(err)
 	}

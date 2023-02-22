@@ -42,8 +42,8 @@ func (u *UserCreateRequest) HashPassword() error {
 // user update request
 
 type UserUpdateRequest struct {
-	UserId         string  `json:"user_id"`
-	Name           string  `json:"name"`
+	UserID string `json:"user_id"`
+	Name   string `json:"name"`
 	Email          string  `json:"email"`
 	Password       string  `json:"password"`
 	HashedPassword string  `json:"-"`

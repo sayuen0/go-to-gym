@@ -7,8 +7,11 @@ import (
 )
 
 type Config struct {
-	Server ServerConfig `viper:"server"`
-	DB     DBConfig     `viper:"db"`
+	Server  ServerConfig  `viper:"server"`
+	DB      DBConfig      `viper:"db"`
+	Redis   RedisConfig   `viper:"redis"`
+	Session SessionConfig `viper:"session"`
+	Cookie  CookieConfig  `viper:"cookie"`
 }
 
 type ServerConfig struct {
@@ -29,6 +32,29 @@ type DBConfig struct {
 	ParseTime bool
 	Collation string
 	Location  string
+}
+
+type RedisConfig struct {
+	Addr         string
+	Password     string
+	DB           int
+	DefaultDB    string
+	MinIdleConns int
+	PoolSize     int
+	PoolTimeout  int
+}
+
+type SessionConfig struct {
+	Prefix string
+	Name   string
+	Expire int
+}
+
+type CookieConfig struct {
+	Name     string
+	MaxAge   int
+	Secure   bool
+	HTTPOnly bool
 }
 
 func LoadConfig(filename string) (*viper.Viper, error) {

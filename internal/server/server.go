@@ -2,7 +2,9 @@ package server
 
 import (
 	"context"
+	"database/sql"
 	"github.com/gin-gonic/gin"
+	"github.com/go-redis/redis/v8"
 	"github.com/sayuen0/go-to-gym/config"
 	"github.com/sayuen0/go-to-gym/internal/infrastructure/logger"
 	"net/http"
@@ -23,19 +25,23 @@ type Server interface {
 }
 
 type server struct {
-	gin *gin.Engine
-	cfg *config.Config
-	lg  logger.Logger
+	gin         *gin.Engine
+	cfg         *config.Config
+	lg          logger.Logger
+	db          *sql.DB
+	redisClient *redis.Client
 }
 
 func NewServer(
-	cfg *config.Config, lg logger.Logger,
+	cfg *config.Config, lg logger.Logger, db *sql.DB, redisClient *redis.Client,
 ) Server {
 	r := gin.Default()
 	return &server{
-		gin: r,
-		cfg: cfg,
-		lg:  lg,
+		gin:         r,
+		cfg:         cfg,
+		lg:          lg,
+		db:          db,
+		redisClient: redisClient,
 	}
 }
 
