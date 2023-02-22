@@ -18,7 +18,7 @@ func LogResponseError(c *gin.Context, lg logger.Logger, err error) {
 	)
 }
 
-func SetCookie(c *gin.Context, cfg *config.Config, value string) {
+func CreateSessionCookie(c *gin.Context, cfg *config.Config, value string) {
 	c.SetCookie(
 		cfg.Session.Name,
 		value,
@@ -28,6 +28,17 @@ func SetCookie(c *gin.Context, cfg *config.Config, value string) {
 		cfg.Cookie.Secure,
 		cfg.Cookie.HTTPOnly,
 	)
+}
+
+func DeleteSessionCookie(c *gin.Context, cfg *config.Config) {
+	c.SetCookie(
+		cfg.Session.Name,
+		"",
+		-1,
+		"/",
+		"",
+		false,
+		true)
 }
 
 func ReadRequest(c *gin.Context, request any) error {

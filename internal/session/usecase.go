@@ -7,4 +7,5 @@ import (
 
 type UseCase interface {
 	CreateSession(ctx context.Context, sess *models.Session, expires int) (string, error)
+	DeleteByID(ctx context.Context, id string) error
 }

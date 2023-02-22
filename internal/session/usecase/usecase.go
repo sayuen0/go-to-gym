@@ -22,3 +22,7 @@ func NewSessionUseCase(cfg *config.Config, rp session.Repository) session.UseCas
 func (u *sessionUC) CreateSession(ctx context.Context, sess *models.Session, expires int) (string, error) {
 	return u.rp.CreateSession(ctx, sess, expires)
 }
+
+func (u *sessionUC) DeleteByID(ctx context.Context, id string) error {
+	return u.rp.DeleteByID(ctx, id)
+}

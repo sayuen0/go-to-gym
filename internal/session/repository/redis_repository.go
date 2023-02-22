@@ -38,6 +38,13 @@ func (s *sessionRepo) CreateSession(ctx context.Context, sess *models.Session, e
 	return sessionKey, nil
 }
 
+func (s *sessionRepo) DeleteByID(ctx context.Context, id string) error {
+	if err := s.redisClient.Del(ctx, id).Err(); err != nil {
+		return errors.Wrap(err, "sessionRepo.DeleteByID")
+	}
+	return nil
+}
+
 func (s *sessionRepo) createKey(sessionID string) string {
 	return fmt.Sprintf("%s: %s", s.cfg.Session.Prefix, sessionID)
 }

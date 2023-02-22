@@ -1,6 +1,7 @@
 package http
 
 import (
+	"errors"
 	"github.com/gin-gonic/gin"
 	"github.com/sayuen0/go-to-gym/config"
 	"github.com/sayuen0/go-to-gym/internal/auth"
@@ -41,9 +42,10 @@ func NewAuthHandlers(
 // @Tags Auth
 // @Produces json
 // @Accept json
-// @Success 201 {object} models.User
+// @Success 201 {object} models.UserWithToken
 // @Router /auth/register [post]
 func (h *authHandlers) Register() gin.HandlerFunc {
+	// TODO: add failure situation on swagger
 	return func(c *gin.Context) {
 		ctx := c.Request.Context()
 
@@ -68,7 +70,7 @@ func (h *authHandlers) Register() gin.HandlerFunc {
 			c.JSON(http_errors.ErrorResponse(err))
 			return
 		}
-		utils.SetCookie(c, h.cfg, sess)
+		utils.CreateSessionCookie(c, h.cfg, sess)
 
 		c.JSON(http.StatusCreated, createdUser)
 		return
@@ -76,12 +78,12 @@ func (h *authHandlers) Register() gin.HandlerFunc {
 }
 
 // Login godoc
-// @Summary Login new user
+// @Summary Login as a user
 // @Description login user, returns user and set session
 // @Tags Auth
 // @Accept json
 // @Produce json
-// @Success 200 {object} models.User
+// @Success 200 {object} models.UserWithToken
 // @Router /auth/login [post]
 func (h *authHandlers) Login() gin.HandlerFunc {
 
@@ -112,16 +114,47 @@ func (h *authHandlers) Login() gin.HandlerFunc {
 			c.JSON(http_errors.ErrorResponse(err))
 			return
 		}
-		utils.SetCookie(c, h.cfg, sess)
+		utils.CreateSessionCookie(c, h.cfg, sess)
 
 		c.JSON(http.StatusCreated, userWithToken)
 		return
 	}
 }
 
+// Logout godoc
+// @Summary Logout user
+// @Description logout user removing session
+// @Tags Auth
+// @Accept  json
+// @Produce  json
+// @Success 200 {string} string	"ok"
+// @Failure 500 {string} internal server error
+// @Router /auth/logout [post]
 func (h *authHandlers) Logout() gin.HandlerFunc {
-	//TODO implement me
-	panic("implement me")
+	return func(c *gin.Context) {
+		ctx := c.Request.Context()
+
+		sessionID, err := c.Cookie(h.cfg.Session.Name)
+		if err != nil {
+			if errors.Is(err, http.ErrNoCookie) {
+				c.JSON(http.StatusUnauthorized, http_errors.Unauthorized(err))
+				return
+			}
+			utils.LogResponseError(c, h.lg, err)
+			c.JSON(http.StatusInternalServerError, http_errors.InternalServerError(err))
+			return
+		}
+
+		if err := h.sessUC.DeleteByID(ctx, sessionID); err != nil {
+			utils.LogResponseError(c, h.lg, err)
+			c.JSON(http_errors.ErrorResponse(err))
+			return
+		}
+
+		utils.DeleteSessionCookie(c, h.cfg)
+		c.Status(http.StatusOK)
+		return
+	}
 }
 
 func (h *authHandlers) GetUsers() gin.HandlerFunc {
