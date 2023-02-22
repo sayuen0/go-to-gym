@@ -11,11 +11,10 @@ import (
 // user create request
 
 type UserCreateRequest struct {
-	Name           string  `json:"name"`
-	Email          string  `json:"email"`
-	Password       string  `json:"password"`
-	HashedPassword string  `json:"-"`
-	Gender         *string `json:"gender,omitempty"`
+	Name           string `json:"name"`
+	Email          string `json:"email"`
+	Password       string `json:"password"`
+	HashedPassword string `json:"-"`
 	// TODO: add birthday
 }
 
@@ -42,8 +41,8 @@ func (u *UserCreateRequest) HashPassword() error {
 // user update request
 
 type UserUpdateRequest struct {
-	UserID string `json:"user_id"`
-	Name   string `json:"name"`
+	UserID         string  `json:"user_id"`
+	Name           string  `json:"name"`
 	Email          string  `json:"email"`
 	Password       string  `json:"password"`
 	HashedPassword string  `json:"-"`
