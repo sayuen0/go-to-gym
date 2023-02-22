@@ -7,7 +7,7 @@ import (
 
 func MapAuthRoutes(rg *gin.RouterGroup, h auth.Handlers) {
 	rg.POST("/register", h.Register())
-	//rg.POST("/login", h.Login())
+	rg.POST("/login", h.Login())
 	//rg.POST("/logout", h.Logout())
 	//rg.GET("/", h.GetUsers())
 	//rg.GET("/:user_id", h.GetUserByID())

@@ -37,6 +37,14 @@ func (u *UserCreateRequest) HashPassword() error {
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
+// user login request
+
+type UserLoginRequest struct {
+	Email    string `json:"email" validate:"required"`
+	Password string `json:"password" validate:"required"`
+}
+
+// ---------------------------------------------------------------------------------------------------------------------
 // user update request
 
 type UserUpdateRequest struct {
@@ -77,4 +85,14 @@ func NewUserWithToken(e *db.User, token string) *UserWithToken {
 		User:  NewUser(e),
 		Token: token,
 	}
+}
+
+// ---------------------------------------------------------------------------------------------------------------------
+// utils
+
+func CompareUserPassword(inputPassword, hashedPassword string) error {
+	if err := bcrypt.CompareHashAndPassword([]byte(hashedPassword), []byte(inputPassword)); err != nil {
+		return err
+	}
+	return nil
 }

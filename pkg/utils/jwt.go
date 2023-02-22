@@ -3,7 +3,6 @@ package utils
 import (
 	"github.com/golang-jwt/jwt"
 	"github.com/sayuen0/go-to-gym/config"
-	"github.com/sayuen0/go-to-gym/internal/models"
 	"time"
 )
 
@@ -17,10 +16,10 @@ type Claims struct {
 	jwt.StandardClaims
 }
 
-func GenerateJWTToken(user *models.User, config *config.Config) (string, error) {
+func GenerateJWTToken(email string, userID string, config *config.Config) (string, error) {
 	claims := &Claims{
-		Email: user.Email,
-		ID:    user.UserID,
+		Email: email,
+		ID:    userID,
 		StandardClaims: jwt.StandardClaims{
 			ExpiresAt: time.Now().Add(time.Minute * jwtExpiresMinutes).Unix(),
 		},

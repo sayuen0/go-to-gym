@@ -59,6 +59,10 @@ func BadRequest(causes any) RestErr {
 	return restErr{status: http.StatusBadRequest, error: errorBadRequest.Error(), causes: causes}
 }
 
+func Unauthorized(causes any) RestErr {
+	return restErr{status: http.StatusUnauthorized, error: errorUnauthorized.Error(), causes: causes}
+}
+
 func NotFound(causes any) RestErr {
 	return restErr{status: http.StatusNotFound, error: errorNotFound.Error(), causes: causes}
 }
@@ -77,6 +81,7 @@ func ParseErrors(err error) RestErr {
 	}
 }
 
+// ErrorResponse returns error status and body
 func ErrorResponse(err error) (int, gin.H) {
 	e := ParseErrors(err)
 	return e.Status(), gin.H{"msg": e.Error()}

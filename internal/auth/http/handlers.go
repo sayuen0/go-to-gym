@@ -63,6 +63,11 @@ func (h *authHandlers) Register() gin.HandlerFunc {
 		sess, err := h.sessUC.CreateSession(ctx,
 			&models.Session{UserID: createdUser.User.UserID},
 			h.cfg.Session.Expire)
+		if err != nil {
+			utils.LogResponseError(c, h.lg, err)
+			c.JSON(http_errors.ErrorResponse(err))
+			return
+		}
 		utils.SetCookie(c, h.cfg, sess)
 
 		c.JSON(http.StatusCreated, createdUser)
@@ -70,9 +75,48 @@ func (h *authHandlers) Register() gin.HandlerFunc {
 	}
 }
 
+// Login godoc
+// @Summary Login new user
+// @Description login user, returns user and set session
+// @Tags Auth
+// @Accept json
+// @Produce json
+// @Success 200 {object} models.User
+// @Router /auth/login [post]
 func (h *authHandlers) Login() gin.HandlerFunc {
-	//TODO implement me
-	panic("implement me")
+
+	return func(c *gin.Context) {
+		ctx := c.Request.Context()
+		login := &models.UserLoginRequest{}
+		if err := utils.ReadRequest(c, login); err != nil {
+			utils.LogResponseError(c, h.lg, err)
+			c.JSON(http_errors.ErrorResponse(err))
+			return
+		}
+
+		userWithToken, err := h.uc.Login(ctx, &models.UserLoginRequest{
+			Email:    login.Email,
+			Password: login.Password,
+		})
+		if err != nil {
+			utils.LogResponseError(c, h.lg, err)
+			c.JSON(http_errors.ErrorResponse(err))
+			return
+		}
+
+		sess, err := h.sessUC.CreateSession(ctx,
+			&models.Session{UserID: userWithToken.User.UserID},
+			h.cfg.Session.Expire)
+		if err != nil {
+			utils.LogResponseError(c, h.lg, err)
+			c.JSON(http_errors.ErrorResponse(err))
+			return
+		}
+		utils.SetCookie(c, h.cfg, sess)
+
+		c.JSON(http.StatusCreated, userWithToken)
+		return
+	}
 }
 
 func (h *authHandlers) Logout() gin.HandlerFunc {

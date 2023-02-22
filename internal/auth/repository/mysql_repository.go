@@ -20,7 +20,7 @@ func NewAuthRepo(db *sql.DB) auth.Repository {
 	return &authRepo{db: db}
 }
 
-func (r *authRepo) Register(ctx context.Context, user *models.UserCreateRequest) (*models.User, error) {
+func (r *authRepo) Register(ctx context.Context, user *models.UserCreateRequest) (*db.User, error) {
 	u := &db.User{
 		UUID:           utils.NewUUIDStr(),
 		Name:           user.Name,
@@ -32,13 +32,13 @@ func (r *authRepo) Register(ctx context.Context, user *models.UserCreateRequest)
 		return nil, errors.Wrap(err, "authRepo.Register.Insert")
 	}
 
-	return models.NewUser(u), nil
+	return u, nil
 }
 
-func (r *authRepo) FindByEmail(ctx context.Context, email string) (*models.User, error) {
+func (r *authRepo) FindByEmail(ctx context.Context, email string) (*db.User, error) {
 	u, err := db.Users(qm.Where("email = ? ", email)).One(ctx, r.db)
 	if err != nil {
 		return nil, err
 	}
-	return models.NewUser(u), nil
+	return u, nil
 }
