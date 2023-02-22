@@ -15,6 +15,7 @@ db:
     ParseTime: true
     Collation: utf8mb4_general_ci
     Location: Asia/Tokyo
+    Debug: true
 
 redis:
     Addr: localhost:6379

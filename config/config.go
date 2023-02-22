@@ -32,6 +32,7 @@ type DBConfig struct {
 	ParseTime bool
 	Collation string
 	Location  string
+	Debug     bool
 }
 
 type RedisConfig struct {

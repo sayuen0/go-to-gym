@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"context"
 	"github.com/gin-gonic/gin"
 	"github.com/sayuen0/go-to-gym/config"
 	"github.com/sayuen0/go-to-gym/internal/infrastructure/logger"
@@ -48,6 +49,13 @@ func ReadRequest(c *gin.Context, request any) error {
 	return ValidateStruct(c.Request.Context(), request)
 }
 
+// GetConfigPath return
 func GetConfigPath(configPath string) string {
+	// TODO: set by env
 	return "./config/config-local"
+}
+
+// GetRequestCtx returns request context.Context
+func GetRequestCtx(c *gin.Context) context.Context {
+	return c.Request.Context()
 }

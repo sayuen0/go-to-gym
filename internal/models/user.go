@@ -88,6 +88,22 @@ func NewUserWithToken(e *db.User, token string) *UserWithToken {
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
+// users list response
+
+type UsersList struct {
+	Paging `json:"paging"`
+	Users  []*User `json:"users"`
+}
+
+func NewUsersList(users []*db.User, p Paging) *UsersList {
+	list := &UsersList{Users: make([]*User, 0, len(users)), Paging: p}
+	for _, u := range users {
+		list.Users = append(list.Users, NewUser(u))
+	}
+	return list
+}
+
+// ---------------------------------------------------------------------------------------------------------------------
 // utils
 
 func CompareUserPassword(inputPassword, hashedPassword string) error {

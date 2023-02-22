@@ -31,6 +31,7 @@ func newMySQL(c *config.Config) (*sql.DB, error) {
 		return nil, err
 	}
 	boil.SetDB(db)
+	boil.DebugMode = c.DB.Debug
 
 	return db, nil
 }

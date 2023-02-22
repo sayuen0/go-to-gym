@@ -171,8 +171,22 @@ func (h *authHandlers) Logout() gin.HandlerFunc {
 // @Router /auth/all [get]
 func (h *authHandlers) GetUsers() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		ctx := c.Request.Context()
+		ctx := utils.GetRequestCtx(c)
+		paginationReq, err := utils.GetPaginationRequest(c)
+		if err != nil {
+			utils.LogResponseError(c, h.lg, err)
+			c.JSON(http_errors.ErrorResponse(err))
+			return
+		}
 
+		users, err := h.uc.GetUsers(ctx, paginationReq)
+		if err != nil {
+			utils.LogResponseError(c, h.lg, err)
+			c.JSON(http_errors.ErrorResponse(err))
+			return
+		}
+		c.JSON(http.StatusOK, users)
+		return
 	}
 }
 

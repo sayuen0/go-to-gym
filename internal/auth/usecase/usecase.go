@@ -67,3 +67,20 @@ func (u *authUC) Login(ctx context.Context, req *models.UserLoginRequest) (*mode
 		Token: token,
 	}, nil
 }
+
+// GetUsers returns *models.UsersList queried with *utils.PaginationRequest
+func (u *authUC) GetUsers(ctx context.Context, req *utils.PaginationRequest) (*models.UsersList, error) {
+	totalCount, err := u.authRepo.GetCount(ctx)
+	if err != nil {
+		return nil, errors.Wrap(err, "authRepo.GetUsers.GetCount")
+	}
+	users, err := u.authRepo.GetUsers(ctx, req)
+	if err != nil {
+		return nil, err
+	}
+	return models.NewUsersList(users, models.Paging{
+		Page:  req.Page,
+		Size:  req.Size,
+		Total: totalCount,
+	}), nil
+}

@@ -36,9 +36,19 @@ func (r *authRepo) Register(ctx context.Context, user *models.UserCreateRequest)
 }
 
 func (r *authRepo) FindByEmail(ctx context.Context, email string) (*db.User, error) {
-	u, err := db.Users(qm.Where("email = ? ", email)).One(ctx, r.db)
+	u, err := db.Users(qm.Where("email=?", email)).One(ctx, r.db)
 	if err != nil {
 		return nil, err
 	}
 	return u, nil
+}
+
+func (r *authRepo) GetUsers(ctx context.Context, req *utils.PaginationRequest) ([]*db.User, error) {
+	return db.Users(
+		req.GenerateQueryMods()...,
+	).All(ctx, r.db)
+}
+
+func (r *authRepo) GetCount(ctx context.Context) (int64, error) {
+	return db.Users().Count(ctx, r.db)
 }
