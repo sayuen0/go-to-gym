@@ -12,6 +12,7 @@ import (
 	"net/http"
 )
 
+// authHandlers auth handlers
 type authHandlers struct {
 	cfg    *config.Config
 	uc     auth.UseCase
@@ -19,6 +20,7 @@ type authHandlers struct {
 	lg     logger.Logger
 }
 
+// NewAuthHandlers is a constructor of authHandlers
 func NewAuthHandlers(
 	cfg *config.Config,
 	lg logger.Logger,
@@ -37,10 +39,10 @@ func NewAuthHandlers(
 // @Summary Register new user
 // @Description register new user, return user and token
 // @Tags Auth
-// @Accept json
 // @Produces json
-// Success 201 {object} models.User
-// @Route /auth/register [post]
+// @Accept json
+// @Success 201 {object} models.User
+// @Router /auth/register [post]
 func (h *authHandlers) Register() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		ctx := c.Request.Context()

@@ -2,6 +2,7 @@ package server
 
 import (
 	"github.com/gin-gonic/gin"
+
 	authHttp "github.com/sayuen0/go-to-gym/internal/auth/http"
 	authRepo "github.com/sayuen0/go-to-gym/internal/auth/repository"
 	authUseCase "github.com/sayuen0/go-to-gym/internal/auth/usecase"
@@ -24,10 +25,10 @@ func (s *server) Handle(r *gin.Engine) error {
 	// TODO init handlers
 	authHandlers := authHttp.NewAuthHandlers(s.cfg, s.lg, authUC, sessUC)
 
-	health := r.Group("/health")
 	authGroup := r.Group("/auth")
 	authHttp.MapAuthRoutes(authGroup, authHandlers)
 
+	health := r.Group("/health")
 	health.GET("/", func(c *gin.Context) {
 		// TODO: identify health check ID
 		s.lg.Info("Health check")

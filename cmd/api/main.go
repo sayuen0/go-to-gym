@@ -11,6 +11,11 @@ import (
 	"os"
 )
 
+// @title Go To Gym API
+// @version 1.0
+// @contact.name sayuen0
+// @contact.url https://github.com/sayuen0
+// @basePath /
 func main() {
 	configPath := utils.GetConfigPath(os.Getenv("config"))
 	viperConfig, err := config.LoadConfig(configPath)
