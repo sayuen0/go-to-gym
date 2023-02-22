@@ -3,6 +3,7 @@ package http_errors
 import (
 	"errors"
 	"fmt"
+	"github.com/gin-gonic/gin"
 	"net/http"
 )
 
@@ -76,7 +77,7 @@ func ParseErrors(err error) RestErr {
 	}
 }
 
-func ErrorResponse(err error) (int, any) {
+func ErrorResponse(err error) (int, gin.H) {
 	e := ParseErrors(err)
-	return e.Status(), e
+	return e.Status(), gin.H{"msg": e.Error()}
 }

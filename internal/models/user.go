@@ -4,16 +4,15 @@ import (
 	"github.com/sayuen0/go-to-gym/internal/models/db"
 	"golang.org/x/crypto/bcrypt"
 	"strings"
-	"time"
 )
 
 // ---------------------------------------------------------------------------------------------------------------------
 // user create request
 
 type UserCreateRequest struct {
-	Name           string `json:"name"`
-	Email          string `json:"email"`
-	Password       string `json:"password"`
+	Name           string `json:"name" validate:"required"`
+	Email          string `json:"email" validate:"required"`
+	Password       string `json:"password" validate:"required"`
 	HashedPassword string `json:"-"`
 	// TODO: add birthday
 }
@@ -41,10 +40,10 @@ func (u *UserCreateRequest) HashPassword() error {
 // user update request
 
 type UserUpdateRequest struct {
-	UserID         string  `json:"user_id"`
-	Name           string  `json:"name"`
-	Email          string  `json:"email"`
-	Password       string  `json:"password"`
+	UserID         string  `json:"user_id" validate:"required"`
+	Name           string  `json:"name" validate:"required"`
+	Email          string  `json:"email" validate:"required"`
+	Password       string  `json:"password" validate:"required"`
 	HashedPassword string  `json:"-"`
 	Gender         *string `json:"gender,omitempty"`
 }
@@ -55,12 +54,9 @@ type UserUpdateRequest struct {
 // user get response
 
 type User struct {
-	UserID    string    `json:"user_id"`
-	Name      string    `json:"name"`
-	Email     string    `json:"email"`
-	CreatedAt time.Time `json:"created_at"`
-	UpdatedAt time.Time `json:"updated_at"`
-	LoginDate time.Time `json:"login_date"`
+	UserID string `json:"user_id"`
+	Name   string `json:"name"`
+	Email  string `json:"email"`
 }
 
 func NewUser(e *db.User) *User {

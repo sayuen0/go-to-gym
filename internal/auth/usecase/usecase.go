@@ -24,7 +24,7 @@ func NewAuthUseCase(cfg *config.Config, lg logger.Logger, authRepo auth.Reposito
 func (u authUC) Register(ctx context.Context, req *models.UserCreateRequest) (*models.UserWithToken, error) {
 	existsUser, err := u.authRepo.FindByEmail(ctx, req.Email)
 	if existsUser != nil && err == nil {
-		return nil, http_errors.BadRequest(err)
+		return nil, http_errors.BadRequest(errors.New("already registered email"))
 	}
 
 	if err := req.PrepareForCreate(); err != nil {
