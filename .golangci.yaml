@@ -8,6 +8,9 @@ linters:
     - gochecknoglobals
     - exhaustruct
     - errorlint
+    - gochecknoinits
+    - godot
+    - godox
     # deprecated linters
     - golint
     - interfacer

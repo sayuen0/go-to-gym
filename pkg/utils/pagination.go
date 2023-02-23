@@ -29,6 +29,7 @@ func GetPaginationRequest(c *gin.Context) (*PaginationRequest, error) {
 		if err != nil {
 			return nil, err
 		}
+
 		q.Size = s
 	} else {
 		q.Size = defaultPaginationSize
@@ -40,6 +41,7 @@ func GetPaginationRequest(c *gin.Context) (*PaginationRequest, error) {
 		if err != nil {
 			return nil, err
 		}
+
 		q.Page = p
 	} else {
 		q.Page = 1

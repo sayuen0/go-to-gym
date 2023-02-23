@@ -33,6 +33,7 @@ func (s *server) Handle(r *gin.Engine) error {
 	if s.cfg.Server.TLS {
 		r.Use(mw.RedirectHTTPToHTTPS())
 	}
+
 	if s.cfg.Server.Debug {
 		r.Use(mw.DebugMiddleware())
 	}

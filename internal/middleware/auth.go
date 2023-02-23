@@ -2,6 +2,7 @@ package middleware
 
 import (
 	"context"
+	"errors"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -19,7 +20,7 @@ func (mw *Wrapper) AuthSessionMiddleware() gin.HandlerFunc {
 		if err != nil {
 			mw.lg.Error("AuthSessionMiddleware.Cookie", logger.Error(err))
 
-			if err == http.ErrNoCookie {
+			if errors.Is(err, http.ErrNoCookie) {
 				c.JSON(http.StatusUnauthorized, httperrors.Unauthorized(err))
 				return
 			}

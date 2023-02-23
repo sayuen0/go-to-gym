@@ -93,6 +93,7 @@ func (u *authUC) GetUsers(ctx context.Context, req *utils.PaginationRequest) (*m
 		return nil, errors.Wrap(err, "authRepo.GetUsers.GetCount")
 	}
 	users, err := u.authRepo.GetUsers(ctx, req)
+
 	if err != nil {
 		return nil, err
 	}
@@ -110,6 +111,7 @@ func (u *authUC) GetByID(ctx context.Context, userID string) (*models.User, erro
 	if err != nil {
 		u.lg.Error("authUC.GetByID.redisRepo.GetByID", logger.Error(err))
 	}
+
 	if cachedUser != nil {
 		return cachedUser, nil
 	}

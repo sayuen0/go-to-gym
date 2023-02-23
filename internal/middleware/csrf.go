@@ -32,6 +32,7 @@ func (mw *Wrapper) CSRF() gin.HandlerFunc {
 			c.JSON(http.StatusUnauthorized, httperrors.NewRestError(http.StatusUnauthorized, "sid not found", ""))
 			return
 		}
+
 		if sessionID, ok := sid.(string); !ok || csrf.ValidToken(token, sessionID, mw.lg) {
 			mw.lg.Error("CSRF Middleware csrf.ValidToken",
 				logger.String("token", token))

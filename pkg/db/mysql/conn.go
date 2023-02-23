@@ -28,6 +28,7 @@ func newMySQL(c *config.Config) (*sql.DB, error) {
 		Collation: c.DB.Collation,
 		Loc:       loc,
 	}
+
 	db, err := sql.Open("mysql", cfg.FormatDSN())
 	if err != nil {
 		return nil, err

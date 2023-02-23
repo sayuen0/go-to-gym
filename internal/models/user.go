@@ -22,6 +22,7 @@ type UserCreateRequest struct {
 func (u *UserCreateRequest) PrepareForCreate() error {
 	u.Email = strings.ToLower(strings.TrimSpace(u.Email))
 	u.Password = strings.TrimSpace(u.Password)
+
 	return nil
 }
 

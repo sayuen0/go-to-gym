@@ -1,6 +1,8 @@
 server:
     AppVersion: 1.0.0
     Port: :8080
+    ReadTimeout: 5
+    WriteTimeout: 5
     JwtSecretKey: IkHG9XrsLYr9bHx1JEhF
     SSL: true
     CSRF: true

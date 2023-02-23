@@ -40,6 +40,6 @@ func main() {
 
 	s := server.NewServer(cfg, zl, db, redisClient)
 	if err := s.Run(); err != nil {
-		log.Fatal(err)
+		panic(err)
 	}
 }

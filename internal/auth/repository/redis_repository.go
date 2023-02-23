@@ -34,6 +34,7 @@ func (r *authRedisRepo) GetByID(ctx context.Context, userID string) (*models.Use
 	if err != nil {
 		return nil, errors.Wrap(err, "authRedisRepo.GetByID.redis.Client.Get")
 	}
+
 	user := &models.User{}
 	if err := json.Unmarshal(userBytes, user); err != nil {
 		return nil, errors.Wrap(err, "authRedisRepo.GetByID.json.Unmarshal")

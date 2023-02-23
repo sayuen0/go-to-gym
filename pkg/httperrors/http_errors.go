@@ -83,6 +83,7 @@ func ParseError(err error) RestErr {
 		if restErr, ok := err.(RestErr); ok {
 			return restErr
 		}
+
 		return InternalServerError(err)
 	}
 }

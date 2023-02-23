@@ -53,10 +53,14 @@ func (s *server) Run() error {
 	if err := s.Handle(s.gin); err != nil {
 		s.lg.Error("Handle error", logger.Error(err))
 	}
+
 	srv := &http.Server{
-		Addr:    s.cfg.Server.Port,
-		Handler: s.gin,
+		Addr:         s.cfg.Server.Port,
+		Handler:      s.gin,
+		ReadTimeout:  time.Second * s.cfg.Server.ReadTimeout,
+		WriteTimeout: time.Second * s.cfg.Server.WriteTimeout,
 	}
+
 	if s.cfg.Server.SSL {
 		// TODO: set read & write timeout
 

@@ -15,6 +15,7 @@ func (mw *Wrapper) RedirectHTTPToHTTPS() gin.HandlerFunc {
 			if len(c.Request.URL.RawQuery) > 0 {
 				url += "?" + c.Request.URL.RawQuery
 			}
+
 			c.Redirect(http.StatusMovedPermanently, url)
 			c.Abort()
 		}

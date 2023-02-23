@@ -1,12 +1,16 @@
 package utils_test
 
-import "testing"
+import (
+	"github.com/sayuen0/go-to-gym/pkg/utils"
+	"testing"
+)
 
 func TestPaginationRequest_GetOffset(t *testing.T) {
 	type fields struct {
 		Size int
 		Page int
 	}
+
 	tests := map[string]struct {
 		fields fields
 		want   int
@@ -17,7 +21,7 @@ func TestPaginationRequest_GetOffset(t *testing.T) {
 	}
 	for name, tt := range tests {
 		t.Run(name, func(t *testing.T) {
-			p := &PaginationRequest{
+			p := &utils.PaginationRequest{
 				Size: tt.fields.Size,
 				Page: tt.fields.Page,
 			}
@@ -41,9 +45,10 @@ func TestPaginationRequest_GenerateOrderBy(t *testing.T) {
 		"multiple":       {fields: fields{OrderBy: "id,name,age"}, want: "id ASC, name ASC, age ASC"},
 		"minus multiple": {fields: fields{OrderBy: "-id,name,-age"}, want: "id DESC, name ASC, age DESC"},
 	}
+
 	for name, tt := range tests {
 		t.Run(name, func(t *testing.T) {
-			p := &PaginationRequest{
+			p := &utils.PaginationRequest{
 				OrderBy: tt.fields.OrderBy,
 			}
 			if got := p.GenerateOrderBy(); got != tt.want {
