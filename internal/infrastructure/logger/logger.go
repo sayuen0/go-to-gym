@@ -94,3 +94,8 @@ func String(key, val string) zap.Field {
 func Int(key string, val int) zap.Field {
 	return zap.Int(key, val)
 }
+
+// ByteString return zap.ByteString
+func ByteString(key string, val []byte) zap.Field {
+	return zap.ByteString(key, val)
+}

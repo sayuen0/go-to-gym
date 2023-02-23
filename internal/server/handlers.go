@@ -13,19 +13,29 @@ import (
 )
 
 func (s *server) Handle(r *gin.Engine) error {
-	// TODO: init repositories
+	// -----------------------------------------------------------------------------------------------------------------
+	// repositories
 	authRp := authRepo.NewAuthRepo(s.cfg, s.db)
 	authRedisRp := authRepo.NewRedisRepo(s.redisClient)
 	sessRp := sessRepo.NewSessionRepo(s.redisClient, s.cfg)
 
-	// TODO init use cases
+	// -----------------------------------------------------------------------------------------------------------------
+	// use-cases
 	authUC := authUseCase.NewAuthUseCase(s.cfg, s.lg, authRp, authRedisRp)
 	sessUC := sessUseCase.NewSessionUseCase(s.cfg, sessRp)
 
-	// TODO use middlewares
+	// -----------------------------------------------------------------------------------------------------------------
+	// middlewares
 	mw := middleware.NewMiddlewareWrapper(s.cfg, s.lg, sessUC, authUC)
+	r.Use(gin.Recovery())
+	r.Use(mw.RedirectToHTTPS())
 
-	// TODO init handlers
+	if s.cfg.Server.Debug {
+		r.Use(mw.DebugMiddleware())
+	}
+
+	// -----------------------------------------------------------------------------------------------------------------
+	// handlers
 	authHandlers := authHttp.NewAuthHandlers(s.cfg, s.lg, authUC, sessUC)
 
 	authGroup := r.Group("/auth")
@@ -37,5 +47,6 @@ func (s *server) Handle(r *gin.Engine) error {
 		s.lg.Info("Health check")
 		c.String(http.StatusOK, "OK")
 	})
+
 	return nil
 }
