@@ -5,6 +5,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/sayuen0/go-to-gym/config"
 	"github.com/sayuen0/go-to-gym/internal/infrastructure/logger"
+	"github.com/sayuen0/go-to-gym/pkg/httperrors"
 )
 
 // GetIPAddress returns requesters' remote IP address
@@ -12,11 +13,20 @@ func GetIPAddress(c *gin.Context) string {
 	return c.RemoteIP()
 }
 
-// LogResponseError writes an error log to lg
+func ErrorResponseWithLog(c *gin.Context, lg logger.Logger, err error) {
+	lg.Error("ErrorResponseWithLog",
+		// TODO: get request id
+		logger.String("IP", GetIPAddress(c)),
+		logger.Error(err),
+	)
+	c.JSON(httperrors.ErrorResponse(err))
+}
+
+// LogResponseError writes an error log to logger.Logger
 func LogResponseError(c *gin.Context, lg logger.Logger, err error) {
 	lg.Error("Error response with log",
 		// TODO: get request id
-		logger.String("ip_address", GetIPAddress(c)),
+		logger.String("IP", GetIPAddress(c)),
 		logger.Error(err),
 	)
 }
@@ -45,6 +55,9 @@ func DeleteSessionCookie(c *gin.Context, cfg *config.Config) {
 		false,
 		true)
 }
+
+// UserCtxKey is a key user for the User object in the context
+type UserCtxKey struct{}
 
 // ReadRequest reads http request body and validates it
 func ReadRequest(c *gin.Context, request any) error {

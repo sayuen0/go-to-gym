@@ -26,3 +26,7 @@ func (u *sessionUC) CreateSession(ctx context.Context, sess *models.Session, exp
 func (u *sessionUC) DeleteByID(ctx context.Context, id string) error {
 	return u.rp.DeleteByID(ctx, id)
 }
+
+func (u *sessionUC) GetSessionById(ctx context.Context, id string) (*models.Session, error) {
+	return u.rp.GetSessionById(ctx, id)
+}

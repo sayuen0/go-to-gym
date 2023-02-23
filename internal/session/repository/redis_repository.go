@@ -18,12 +18,14 @@ type sessionRepo struct {
 	cfg         *config.Config
 }
 
+// NewSessionRepo is a constructor of session.Repository
 func NewSessionRepo(redisClient *redis.Client, cfg *config.Config) session.Repository {
 	return &sessionRepo{
 		redisClient: redisClient, cfg: cfg,
 	}
 }
 
+// CreateSession creates a new session
 func (s *sessionRepo) CreateSession(ctx context.Context, sess *models.Session, expiration int) (string, error) {
 	sess.SessionID = utils.NewUUIDStr()
 	sessionKey := s.createKey(sess.SessionID)
@@ -38,6 +40,22 @@ func (s *sessionRepo) CreateSession(ctx context.Context, sess *models.Session, e
 	return sessionKey, nil
 }
 
+// GetSessionById returns a session
+func (s *sessionRepo) GetSessionById(ctx context.Context, id string) (*models.Session, error) {
+	sessBytes, err := s.redisClient.Get(ctx, id).Bytes()
+	if err != nil {
+		return nil, errors.Wrap(err, "sessionRepo.GetSessionById.redisClient.Get")
+	}
+
+	sess := &models.Session{}
+	if err := json.Unmarshal(sessBytes, sess); err != nil {
+		return nil, errors.Wrap(err, "sessionRepo.GetSessionById.json.Unmarshal")
+	}
+
+	return sess, nil
+}
+
+// DeleteByID deletes the session
 func (s *sessionRepo) DeleteByID(ctx context.Context, id string) error {
 	if err := s.redisClient.Del(ctx, id).Err(); err != nil {
 		return errors.Wrap(err, "sessionRepo.DeleteByID")

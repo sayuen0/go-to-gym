@@ -8,11 +8,11 @@ import (
 )
 
 var (
-	errorBadRequest          = errors.New("bad request")
-	errorNotFound            = errors.New("not found")
-	errorUnauthorized        = errors.New("unauthorized")
-	errorForbidden           = errors.New("forbidden")
-	errorInternalServerError = errors.New("internal server error")
+	ErrorBadRequest          = errors.New("bad request")
+	ErrorNotFound            = errors.New("not found")
+	ErrorUnauthorized        = errors.New("unauthorized")
+	ErrorForbidden           = errors.New("forbidden")
+	ErrorInternalServerError = errors.New("internal server error")
 )
 
 // RestErr represents the http error with status code, message and its wrapped cause
@@ -59,22 +59,22 @@ func NewRestErrorWithMessage(status int, err string, causes any) RestErr {
 
 // BadRequest wraps causes with HTTP bad request error
 func BadRequest(causes any) RestErr {
-	return restErr{status: http.StatusBadRequest, error: errorBadRequest.Error(), causes: causes}
+	return restErr{status: http.StatusBadRequest, error: ErrorBadRequest.Error(), causes: causes}
 }
 
 // Unauthorized wraps causes with HTTP unauthorized error
 func Unauthorized(causes any) RestErr {
-	return restErr{status: http.StatusUnauthorized, error: errorUnauthorized.Error(), causes: causes}
+	return restErr{status: http.StatusUnauthorized, error: ErrorUnauthorized.Error(), causes: causes}
 }
 
 // NotFound wraps causes with HTTP not found error
 func NotFound(causes any) RestErr {
-	return restErr{status: http.StatusNotFound, error: errorNotFound.Error(), causes: causes}
+	return restErr{status: http.StatusNotFound, error: ErrorNotFound.Error(), causes: causes}
 }
 
 // InternalServerError wraps causes with HTTP internal server error
 func InternalServerError(causes any) RestErr {
-	return restErr{status: http.StatusInternalServerError, error: errorInternalServerError.Error(), causes: causes}
+	return restErr{status: http.StatusInternalServerError, error: ErrorInternalServerError.Error(), causes: causes}
 }
 
 // ParseError defines which kind of HTTP error err is

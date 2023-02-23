@@ -2,6 +2,7 @@ package server
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/sayuen0/go-to-gym/internal/middleware"
 
 	authHttp "github.com/sayuen0/go-to-gym/internal/auth/http"
 	authRepo "github.com/sayuen0/go-to-gym/internal/auth/repository"
@@ -22,12 +23,13 @@ func (s *server) Handle(r *gin.Engine) error {
 	sessUC := sessUseCase.NewSessionUseCase(s.cfg, sessRp)
 
 	// TODO use middlewares
+	mw := middleware.NewMiddlewareWrapper(s.cfg, s.lg, sessUC, authUC)
 
 	// TODO init handlers
 	authHandlers := authHttp.NewAuthHandlers(s.cfg, s.lg, authUC, sessUC)
 
 	authGroup := r.Group("/auth")
-	authHttp.MapAuthRoutes(authGroup, authHandlers)
+	authHttp.MapAuthRoutes(authGroup, authHandlers, mw)
 
 	health := r.Group("/health")
 	health.GET("/", func(c *gin.Context) {

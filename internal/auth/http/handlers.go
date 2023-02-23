@@ -167,7 +167,7 @@ func (h *authHandlers) Logout() gin.HandlerFunc {
 // @Param orderBy query int false "filter name" Format(orderBy)
 // @Produce json
 // @Success 200 {object} models.UsersList
-// @Failure 500 {object} httpErrors.RestError
+// @Failure 500 {object} httperrors.RestErr
 // @Router /auth/all [get]
 func (h *authHandlers) GetUsers() gin.HandlerFunc {
 	return func(c *gin.Context) {
@@ -198,7 +198,7 @@ func (h *authHandlers) GetUsers() gin.HandlerFunc {
 // @Produce  json
 // @Param id path int true "user_id"
 // @Success 200 {object} models.User
-// @Failure 500 {object} httpErrors.RestError
+// @Failure 500 {object} httperrors.RestErr
 // @Router /auth/{id} [get]
 func (h *authHandlers) GetUserByID() gin.HandlerFunc {
 	return func(c *gin.Context) {
@@ -217,9 +217,33 @@ func (h *authHandlers) GetUserByID() gin.HandlerFunc {
 	}
 }
 
+// GetMe godoc
+// @Summary Get user by id
+// @Description Get current user by id
+// @Tags Auth
+// @Accept json
+// @Produce json
+// @Success 200 {object} models.User
+// @Failure 500 {object} httperrors.RestErr
+// @Router /auth/me [get]
 func (h *authHandlers) GetMe() gin.HandlerFunc {
-	//TODO implement me
-	panic("implement me")
+	return func(c *gin.Context) {
+		u, found := c.Get("user")
+		if !found {
+			utils.LogResponseError(c, h.lg, httperrors.Unauthorized(httperrors.ErrorUnauthorized))
+			utils.ErrorResponseWithLog(c, h.lg, httperrors.Unauthorized(httperrors.ErrorUnauthorized))
+			return
+		}
+		user, ok := u.(*models.User)
+		if !ok {
+			utils.LogResponseError(c, h.lg, httperrors.InternalServerError(httperrors.ErrorInternalServerError))
+			utils.ErrorResponseWithLog(c, h.lg, httperrors.InternalServerError(httperrors.ErrorInternalServerError))
+			return
+		}
+
+		c.JSON(http.StatusOK, user)
+		return
+	}
 }
 
 func (h *authHandlers) Update() gin.HandlerFunc {
