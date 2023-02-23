@@ -11,6 +11,7 @@ import (
 
 // AuthSessionMiddleware checks if user is logged in and if not then returns http.StatusUnauthorized
 // Handlers which is set after this middleware requires user logged in before handling
+// TODO: 個別に登録する
 func (mw *Wrapper) AuthSessionMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		cookie, err := c.Cookie(mw.cfg.Session.Name)

@@ -67,7 +67,7 @@ func (u *authUC) Login(ctx context.Context, req *models.UserLoginRequest) (*mode
 
 	password := utils.PasswordVerifier{
 		Salt:   dbUser.Salt,
-		Pepper: u.cfg.Server.Pepper,
+		Pepper: u.cfg.Server.SecretSalt,
 	}
 	if err := password.ComparePassword(req.Password, dbUser.HashedPassword); err != nil {
 		return nil, httperrors.Unauthorized(errors.Wrap(err, "authUC.Login.ComparePassword"))

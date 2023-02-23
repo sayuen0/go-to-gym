@@ -27,7 +27,7 @@ func NewAuthRepo(cfg *config.Config, db *sql.DB) auth.Repository {
 func (r *authRepo) Register(ctx context.Context, req *models.UserCreateRequest) (*db.User, error) {
 	salt := utils.GenerateSalt()
 	password := utils.PasswordVerifier{
-		Pepper: r.cfg.Server.Pepper,
+		Pepper: r.cfg.Server.SecretSalt,
 		Salt:   salt,
 	}
 	hashedPassword, err := password.HashPassword(req.Password)

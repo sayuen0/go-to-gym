@@ -5,7 +5,8 @@ import (
 	"net/http"
 )
 
-func (mw *Wrapper) RedirectToHTTPS() gin.HandlerFunc {
+// RedirectHTTPToHTTPS redirects to HTTPS if request is HTTP
+func (mw *Wrapper) RedirectHTTPToHTTPS() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		if c.Request.TLS == nil {
 			// Redirect to HTTPS

@@ -23,7 +23,8 @@ type ServerConfig struct {
 	SSL          bool
 	CSRF         bool
 	Debug        bool
-	Pepper       string
+	SecretSalt   string
+	TLS          bool
 }
 
 // DBConfig represents the configuration of DB connection

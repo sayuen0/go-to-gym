@@ -27,8 +27,10 @@ func (s *server) Handle(r *gin.Engine) error {
 	// middlewares
 	mw := middleware.NewMiddlewareWrapper(s.cfg, s.lg, sessUC, authUC)
 	r.Use(gin.Recovery())
-	r.Use(mw.RedirectToHTTPS())
 
+	if s.cfg.Server.TLS {
+		r.Use(mw.RedirectHTTPToHTTPS())
+	}
 	if s.cfg.Server.Debug {
 		r.Use(mw.DebugMiddleware())
 	}

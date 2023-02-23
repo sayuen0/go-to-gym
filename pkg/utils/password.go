@@ -16,7 +16,7 @@ func GenerateSalt() string {
 	return NewUUIDStr()
 }
 
-// HashPassword hashes its password string with its pepper and salt string
+// HashPassword hashes its password string with its secret-salt and salt string
 func (s PasswordVerifier) HashPassword(rawPassword string) (string, error) {
 	hashed, err := bcrypt.GenerateFromPassword(
 		[]byte(s.getSeasonedPassword(rawPassword)), bcrypt.DefaultCost)
@@ -38,7 +38,7 @@ func (s PasswordVerifier) ComparePassword(
 	return nil
 }
 
-// getSeasonedPassword concatenates password string with its pepper and salt string
+// getSeasonedPassword concatenates password string with its secret-salt and salt string
 func (s PasswordVerifier) getSeasonedPassword(rawPassword string) string {
 	return fmt.Sprintf("%s%s%s", rawPassword, s.Pepper, s.Salt)
 }
