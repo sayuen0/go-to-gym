@@ -35,6 +35,6 @@ cookie:
     Name: jwt-token
     MaxAge: 86400
     Path: /
-    Domain: https://localhost:8080/
+    Domain: localhost
     Secure: false
     HttpOnly: true

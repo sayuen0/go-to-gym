@@ -16,7 +16,6 @@ func (mw *Wrapper) DebugMiddleware() gin.HandlerFunc {
 		}
 		mw.lg.Info("Request dump",
 			logger.ByteString("r", dump))
-
 		c.Next()
 		return
 	}

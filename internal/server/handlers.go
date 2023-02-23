@@ -2,11 +2,10 @@ package server
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/sayuen0/go-to-gym/internal/middleware"
-
 	authHttp "github.com/sayuen0/go-to-gym/internal/auth/http"
 	authRepo "github.com/sayuen0/go-to-gym/internal/auth/repository"
 	authUseCase "github.com/sayuen0/go-to-gym/internal/auth/usecase"
+	"github.com/sayuen0/go-to-gym/internal/middleware"
 	sessRepo "github.com/sayuen0/go-to-gym/internal/session/repository"
 	sessUseCase "github.com/sayuen0/go-to-gym/internal/session/usecase"
 	"net/http"
