@@ -17,7 +17,6 @@ type UserCreateRequest struct {
 	Email          string `json:"email" validate:"required"`
 	Password       string `json:"password" validate:"required"`
 	HashedPassword string `json:"-"`
-	// TODO: add birthday
 }
 
 // PrepareForCreate formats its auth info
@@ -57,12 +56,11 @@ type UserLoginRequest struct {
 
 // UserUpdateRequest represents user update request
 type UserUpdateRequest struct {
-	UserID         string  `json:"user_id" validate:"required"`
-	Name           string  `json:"name" validate:"required"`
-	Email          string  `json:"email" validate:"required"`
-	Password       string  `json:"password" validate:"required"`
-	HashedPassword string  `json:"-"`
-	Gender         *string `json:"gender,omitempty"`
+	UserID         string `json:"user_id" validate:"required"`
+	Name           string `json:"name" validate:"required"`
+	Email          string `json:"email" validate:"required"`
+	Password       string `json:"password" validate:"required"`
+	HashedPassword string `json:"-"`
 }
 
 // TODO: write validate tag

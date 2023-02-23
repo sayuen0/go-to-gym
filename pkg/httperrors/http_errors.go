@@ -15,6 +15,7 @@ var (
 	errorInternalServerError = errors.New("internal server error")
 )
 
+// RestErr represents the http error with status code, message and its wrapped cause
 type RestErr interface {
 	Error() string
 	Status() int
@@ -27,6 +28,7 @@ type restErr struct {
 	causes any
 }
 
+// Error fills error.
 func (e restErr) Error() string {
 	return fmt.Sprintf("status: %d - error: %s - causes: %v", e.status, e.error, e.causes)
 }

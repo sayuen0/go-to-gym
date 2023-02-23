@@ -11,6 +11,7 @@ const (
 	defaultPaginationSize = 10
 )
 
+// PaginationRequest represents pagination requests
 type PaginationRequest struct {
 	Page    int    `json:"page,omitempty,min=1"`
 	Size    int    `json:"size,omitempty,min=0"`

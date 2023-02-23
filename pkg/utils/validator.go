@@ -11,6 +11,7 @@ func init() {
 	validate = validator.New()
 }
 
+// ValidateStruct returns errors if s have invalid fields
 func ValidateStruct(ctx context.Context, s any) error {
 	return validate.StructCtx(ctx, s)
 }
