@@ -37,7 +37,7 @@ func (mw *Wrapper) CSRF() gin.HandlerFunc {
 			c.JSON(http.StatusForbidden, httperrors.NewRestError(http.StatusForbidden, "Invalid CSRF token", "no CSRF token"))
 			return
 		}
+
 		c.Next()
-		return
 	}
 }

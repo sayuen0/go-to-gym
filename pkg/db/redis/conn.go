@@ -6,6 +6,7 @@ import (
 	"time"
 )
 
+// NewRedisClient return redis.Client
 func NewRedisClient(cfg *config.Config) *redis.Client {
 	redisHost := cfg.Redis.Addr
 	if redisHost == "" {

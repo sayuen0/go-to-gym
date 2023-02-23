@@ -1,0 +1,25 @@
+linters:
+  enable-all: true
+  disable:
+    # unnecessary linters
+    - varnamelen
+    - ireturn
+    - wrapcheck
+    - gochecknoglobals
+    - exhaustruct
+    - errorlint
+    # deprecated linters
+    - golint
+    - interfacer
+    - varcheck
+    - scopelint
+    - exhaustivestruct
+    - ifshort
+    - deadcode
+    - structcheck
+    - maligned
+    - nosnakecase
+    # disabled because of genereics
+    - rowserrcheck
+    - structcheck
+    - wastedassign

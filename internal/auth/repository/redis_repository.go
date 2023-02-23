@@ -28,7 +28,7 @@ func NewRedisRepo(redisClient *redis.Client) auth.RedisRepository {
 
 // GetByID return a models.User found by a key with userID
 func (r *authRedisRepo) GetByID(ctx context.Context, userID string) (*models.User, error) {
-	// Redis専用モデルを作成すべき
+	// TODO: Redis専用モデルを作成すべき
 	userBytes, err := r.cli.Get(ctx, r.generateUserKey(userID)).Bytes()
 	if err != nil {
 		return nil, errors.Wrap(err, "authRedisRepo.GetByID.redis.Client.Get")
@@ -47,6 +47,7 @@ func (r *authRedisRepo) SetUser(ctx context.Context, userID string, duration int
 	if err != nil {
 		return errors.Wrap(err, "authRedisRepo.SetUser.json.Marshal")
 	}
+
 	if err := r.cli.Set(ctx, r.generateUserKey(userID),
 		userBytes, time.Second*time.Duration(duration)).Err(); err != nil {
 		return errors.Wrap(err, "authRedisRepo.SetUser.redis.Client.Set")
@@ -54,6 +55,6 @@ func (r *authRedisRepo) SetUser(ctx context.Context, userID string, duration int
 	return nil
 }
 
-func (u *authRedisRepo) generateUserKey(userID string) string {
+func (r *authRedisRepo) generateUserKey(userID string) string {
 	return fmt.Sprintf("%s: %s", basePrefix, userID)
 }

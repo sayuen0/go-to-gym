@@ -42,10 +42,12 @@ func NewLogger() (Logger, error) {
 		OutputPaths:      []string{"stdout", "./log/development.out.log"},
 		ErrorOutputPaths: []string{"stderr", "./log/development.err.log"},
 	}
+
 	zl, err := config.Build()
 	if err != nil {
 		return nil, err
 	}
+
 	return &logger{zl: zl}, nil
 }
 

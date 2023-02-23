@@ -7,6 +7,7 @@ import (
 	"net/http/httputil"
 )
 
+// DebugMiddleware returns a middleware function that logs the outgoing request's HTTP dump for debugging purposes.
 func (mw *Wrapper) DebugMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		dump, err := httputil.DumpRequestOut(c.Request, true)
@@ -14,9 +15,9 @@ func (mw *Wrapper) DebugMiddleware() gin.HandlerFunc {
 			c.Status(http.StatusInternalServerError)
 			return
 		}
+
 		mw.lg.Info("Request dump",
 			logger.ByteString("r", dump))
 		c.Next()
-		return
 	}
 }

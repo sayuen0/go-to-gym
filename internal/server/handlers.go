@@ -26,6 +26,7 @@ func (s *server) Handle(r *gin.Engine) error {
 	// -----------------------------------------------------------------------------------------------------------------
 	// middlewares
 	mw := middleware.NewMiddlewareWrapper(s.cfg, s.lg, sessUC, authUC)
+
 	r.Use(gin.Recovery())
 
 	if s.cfg.Server.TLS {

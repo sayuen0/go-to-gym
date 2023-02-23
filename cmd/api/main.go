@@ -38,7 +38,7 @@ func main() {
 	defer redisClient.Close()
 
 	s := server.NewServer(cfg, zl, db, redisClient)
-	if s.Run(); err != nil {
+	if err := s.Run(); err != nil {
 		log.Fatal(err)
 	}
 }

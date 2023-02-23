@@ -25,7 +25,7 @@ import (
 // User is an object representing the database table.
 type User struct {
 	ID             int        `boil:"id" json:"id" toml:"id" yaml:"id"`
-	UserID         string     `boil:"user_id" json:"user_id" toml:"user_id" yaml:"user_id"`
+	UserID         string     `boil:"user_id" json:"userId" toml:"user_id" yaml:"user_id"`
 	Name           string     `boil:"name" json:"name" toml:"name" yaml:"name"`
 	Email          string     `boil:"email" json:"email" toml:"email" yaml:"email"`
 	Admin          UsersAdmin `boil:"admin" json:"admin" toml:"admin" yaml:"admin"`

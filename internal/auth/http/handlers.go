@@ -73,7 +73,6 @@ func (h *authHandlers) Register() gin.HandlerFunc {
 		utils.CreateSessionCookie(c, h.cfg, sess)
 
 		c.JSON(http.StatusCreated, createdUser)
-		return
 	}
 }
 
@@ -86,7 +85,6 @@ func (h *authHandlers) Register() gin.HandlerFunc {
 // @Success 200 {object} models.UserWithToken
 // @Router /auth/login [post]
 func (h *authHandlers) Login() gin.HandlerFunc {
-
 	return func(c *gin.Context) {
 		ctx := c.Request.Context()
 		login := &models.UserLoginRequest{}
@@ -117,7 +115,6 @@ func (h *authHandlers) Login() gin.HandlerFunc {
 		utils.CreateSessionCookie(c, h.cfg, sess)
 
 		c.JSON(http.StatusCreated, userWithToken)
-		return
 	}
 }
 
@@ -153,7 +150,6 @@ func (h *authHandlers) Logout() gin.HandlerFunc {
 
 		utils.DeleteSessionCookie(c, h.cfg)
 		c.Status(http.StatusOK)
-		return
 	}
 }
 
@@ -186,7 +182,6 @@ func (h *authHandlers) GetUsers() gin.HandlerFunc {
 			return
 		}
 		c.JSON(http.StatusOK, users)
-		return
 	}
 }
 
@@ -213,7 +208,6 @@ func (h *authHandlers) GetUserByID() gin.HandlerFunc {
 		}
 
 		c.JSON(http.StatusOK, user)
-		return
 	}
 }
 
@@ -230,28 +224,27 @@ func (h *authHandlers) GetMe() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		u, found := c.Get("user")
 		if !found {
-			utils.LogResponseError(c, h.lg, httperrors.Unauthorized(httperrors.ErrorUnauthorized))
-			utils.ErrorResponseWithLog(c, h.lg, httperrors.Unauthorized(httperrors.ErrorUnauthorized))
+			utils.LogResponseError(c, h.lg, httperrors.Unauthorized(httperrors.ErrUnauthorized))
+			utils.ErrorResponseWithLog(c, h.lg, httperrors.Unauthorized(httperrors.ErrUnauthorized))
 			return
 		}
 		user, ok := u.(*models.User)
 		if !ok {
-			utils.LogResponseError(c, h.lg, httperrors.InternalServerError(httperrors.ErrorInternalServerError))
-			utils.ErrorResponseWithLog(c, h.lg, httperrors.InternalServerError(httperrors.ErrorInternalServerError))
+			utils.LogResponseError(c, h.lg, httperrors.InternalServerError(httperrors.ErrInternalServerError))
+			utils.ErrorResponseWithLog(c, h.lg, httperrors.InternalServerError(httperrors.ErrInternalServerError))
 			return
 		}
 
 		c.JSON(http.StatusOK, user)
-		return
 	}
 }
 
 func (h *authHandlers) Update() gin.HandlerFunc {
-	//TODO implement me
+	// TODO implement me
 	panic("implement me")
 }
 
 func (h *authHandlers) Delete() gin.HandlerFunc {
-	//TODO implement me
+	// TODO implement me
 	panic("implement me")
 }

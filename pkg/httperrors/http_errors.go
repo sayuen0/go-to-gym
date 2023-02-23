@@ -8,11 +8,16 @@ import (
 )
 
 var (
-	ErrorBadRequest          = errors.New("bad request")
-	ErrorNotFound            = errors.New("not found")
-	ErrorUnauthorized        = errors.New("unauthorized")
-	ErrorForbidden           = errors.New("forbidden")
-	ErrorInternalServerError = errors.New("internal server error")
+	// ErrBadRequest represents bad request error
+	ErrBadRequest = errors.New("bad request")
+	// ErrNotFound represents not found error
+	ErrNotFound = errors.New("not found")
+	// ErrUnauthorized represents unauthorized error
+	ErrUnauthorized = errors.New("unauthorized")
+	// ErrForbidden represents forbidden error
+	ErrForbidden = errors.New("forbidden")
+	// ErrInternalServerError represents internal server error
+	ErrInternalServerError = errors.New("internal server error")
 )
 
 // RestErr represents the http error with status code, message and its wrapped cause
@@ -22,35 +27,28 @@ type RestErr interface {
 	Causes() any
 }
 
-type restErr struct {
+type restError struct {
 	status int
 	error  string
 	causes any
 }
 
 // Error fills error.
-func (e restErr) Error() string {
+func (e restError) Error() string {
 	return fmt.Sprintf("status: %d - error: %s - causes: %v", e.status, e.error, e.causes)
 }
 
-func (e restErr) Status() int {
+func (e restError) Status() int {
 	return e.status
 }
 
-func (e restErr) Causes() any {
+func (e restError) Causes() any {
 	return e.causes
 }
 
+// NewRestError creates RestErr with status, message and wrapped cause
 func NewRestError(status int, err string, causes any) RestErr {
-	return restErr{
-		status: status,
-		error:  err,
-		causes: causes,
-	}
-}
-
-func NewRestErrorWithMessage(status int, err string, causes any) RestErr {
-	return restErr{
+	return restError{
 		status: status,
 		error:  err,
 		causes: causes,
@@ -59,22 +57,22 @@ func NewRestErrorWithMessage(status int, err string, causes any) RestErr {
 
 // BadRequest wraps causes with HTTP bad request error
 func BadRequest(causes any) RestErr {
-	return restErr{status: http.StatusBadRequest, error: ErrorBadRequest.Error(), causes: causes}
+	return restError{status: http.StatusBadRequest, error: ErrBadRequest.Error(), causes: causes}
 }
 
 // Unauthorized wraps causes with HTTP unauthorized error
 func Unauthorized(causes any) RestErr {
-	return restErr{status: http.StatusUnauthorized, error: ErrorUnauthorized.Error(), causes: causes}
+	return restError{status: http.StatusUnauthorized, error: ErrUnauthorized.Error(), causes: causes}
 }
 
 // NotFound wraps causes with HTTP not found error
 func NotFound(causes any) RestErr {
-	return restErr{status: http.StatusNotFound, error: ErrorNotFound.Error(), causes: causes}
+	return restError{status: http.StatusNotFound, error: ErrNotFound.Error(), causes: causes}
 }
 
 // InternalServerError wraps causes with HTTP internal server error
 func InternalServerError(causes any) RestErr {
-	return restErr{status: http.StatusInternalServerError, error: ErrorInternalServerError.Error(), causes: causes}
+	return restError{status: http.StatusInternalServerError, error: ErrInternalServerError.Error(), causes: causes}
 }
 
 // ParseError defines which kind of HTTP error err is
@@ -91,5 +89,6 @@ func ParseError(err error) RestErr {
 // ErrorResponse returns error status and body
 func ErrorResponse(err error) (int, gin.H) {
 	e := ParseError(err)
+
 	return e.Status(), gin.H{"msg": e.Error()}
 }

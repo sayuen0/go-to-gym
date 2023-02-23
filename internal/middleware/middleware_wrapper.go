@@ -7,6 +7,7 @@ import (
 	"github.com/sayuen0/go-to-gym/internal/session"
 )
 
+// Wrapper is a group of middleware
 type Wrapper struct {
 	cfg    *config.Config
 	lg     logger.Logger
@@ -14,6 +15,7 @@ type Wrapper struct {
 	authUC auth.UseCase
 }
 
+// NewMiddlewareWrapper creates a new middleware wrapper
 func NewMiddlewareWrapper(
 	cfg *config.Config,
 	lg logger.Logger,

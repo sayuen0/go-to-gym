@@ -30,6 +30,7 @@ func (r *authRepo) Register(ctx context.Context, req *models.UserCreateRequest) 
 		Pepper: r.cfg.Server.SecretSalt,
 		Salt:   salt,
 	}
+
 	hashedPassword, err := password.HashPassword(req.Password)
 	if err != nil {
 		return nil, errors.Wrap(err, "authRepo.Register.HashPassword")

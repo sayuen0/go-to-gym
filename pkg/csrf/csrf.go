@@ -20,11 +20,14 @@ func MakeToken(sid string, lg logger.Logger) string {
 	if _, err := io.WriteString(hash, fmt.Sprintf("%s%s", sid, csrfSalt)); err != nil {
 		lg.Error("Make CSRF token", logger.Error(err))
 	}
+
 	token := base64.RawStdEncoding.EncodeToString(hash.Sum(nil))
 	return token
 }
 
+// ValidToken returns true when token is valid to sid
 func ValidToken(token, sid string, lg logger.Logger) bool {
 	trueToken := MakeToken(sid, lg)
+
 	return token == trueToken
 }

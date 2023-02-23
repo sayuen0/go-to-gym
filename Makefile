@@ -26,6 +26,8 @@ swaggo:
 	echo "Starting swagger generating"
 	swag init -g **/**/*.go
 
+lint:
+	golangci-lint run
 
 # ==============================================================================
 # Main

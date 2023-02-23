@@ -13,6 +13,7 @@ func GetIPAddress(c *gin.Context) string {
 	return c.RemoteIP()
 }
 
+// ErrorResponseWithLog returns response with logging error information
 func ErrorResponseWithLog(c *gin.Context, lg logger.Logger, err error) {
 	lg.Error("ErrorResponseWithLog",
 		// TODO: get request id

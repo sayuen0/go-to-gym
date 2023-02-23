@@ -13,9 +13,9 @@ const (
 
 // PaginationRequest represents pagination requests
 type PaginationRequest struct {
-	Page    int    `json:"page,omitempty,min=1"`
-	Size    int    `json:"size,omitempty,min=0"`
-	OrderBy string `json:"orderBy,omitempty"`
+	Page    int    `json:"page" validate:"omitempty,min=1"`
+	Size    int    `json:"size" validate:"omitempty,min=0"`
+	OrderBy string `json:"orderBy" validate:"omitempty"`
 }
 
 // GetPaginationRequest return PaginationRequest read by query param

@@ -38,7 +38,7 @@ type UserLoginRequest struct {
 
 // UserUpdateRequest represents user update request
 type UserUpdateRequest struct {
-	UserID         string `json:"user_id" validate:"required"`
+	UserID         string `json:"userId" validate:"required"`
 	Name           string `json:"name" validate:"required"`
 	Email          string `json:"email" validate:"required"`
 	Password       string `json:"password" validate:"required"`
@@ -52,7 +52,7 @@ type UserUpdateRequest struct {
 
 // User represents a response model of user
 type User struct {
-	UserID string `json:"user_id"`
+	UserID string `json:"userId"`
 	Name   string `json:"name"`
 	Email  string `json:"email"`
 }

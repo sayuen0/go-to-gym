@@ -16,6 +16,7 @@ func newMySQL(c *config.Config) (*sql.DB, error) {
 	if err != nil {
 		return nil, err
 	}
+
 	cfg := mysql.Config{
 		DBName:    c.DB.DBName,
 		User:      c.DB.User,
@@ -30,18 +31,21 @@ func newMySQL(c *config.Config) (*sql.DB, error) {
 	if err != nil {
 		return nil, err
 	}
+
 	boil.SetDB(db)
 	boil.DebugMode = c.DB.Debug
 
 	return db, nil
 }
 
+// GetConnection return sql.DB instance (global in application)
 func GetConnection(c *config.Config) *sql.DB {
 	if _db == nil {
 		db, err := newMySQL(c)
 		if err != nil {
 			log.Fatal(err)
 		}
+
 		_db = db
 	}
 	return _db

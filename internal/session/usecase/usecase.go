@@ -12,6 +12,7 @@ type sessionUC struct {
 	rp  session.Repository
 }
 
+// NewSessionUseCase returns a new instance of the session use case.
 func NewSessionUseCase(cfg *config.Config, rp session.Repository) session.UseCase {
 	return &sessionUC{
 		cfg: cfg,
@@ -19,14 +20,17 @@ func NewSessionUseCase(cfg *config.Config, rp session.Repository) session.UseCas
 	}
 }
 
+// CreateSession creates a new session with the given session information and expiration
 func (u *sessionUC) CreateSession(ctx context.Context, sess *models.Session, expires int) (string, error) {
 	return u.rp.CreateSession(ctx, sess, expires)
 }
 
+// DeleteByID deletes the session with the given ID.
 func (u *sessionUC) DeleteByID(ctx context.Context, id string) error {
 	return u.rp.DeleteByID(ctx, id)
 }
 
-func (u *sessionUC) GetSessionById(ctx context.Context, id string) (*models.Session, error) {
-	return u.rp.GetSessionById(ctx, id)
+// GetSessionByID retrieves the session with the given ID.
+func (u *sessionUC) GetSessionByID(ctx context.Context, id string) (*models.Session, error) {
+	return u.rp.GetSessionByID(ctx, id)
 }

@@ -22,23 +22,24 @@ func (mw *Wrapper) AuthSessionMiddleware() gin.HandlerFunc {
 				c.JSON(http.StatusUnauthorized, httperrors.Unauthorized(err))
 				return
 			}
-			c.JSON(http.StatusUnauthorized, httperrors.Unauthorized(httperrors.ErrorUnauthorized))
+
+			c.JSON(http.StatusUnauthorized, httperrors.Unauthorized(httperrors.ErrUnauthorized))
 		}
 
 		sid := cookie
 		ctx := c.Request.Context()
 
 		// セッション取得に失敗した場合は、unauthorized
-		sess, err := mw.sessUC.GetSessionById(ctx, sid)
+		sess, err := mw.sessUC.GetSessionByID(ctx, sid)
 		if err != nil {
-			mw.lg.Error("AuthSessionMiddleware.sessUC.GetSessionById", logger.Error(err), logger.String("cookie", sid))
-			c.JSON(http.StatusUnauthorized, httperrors.Unauthorized(httperrors.ErrorUnauthorized))
+			mw.lg.Error("AuthSessionMiddleware.sessUC.GetSessionByID", logger.Error(err), logger.String("cookie", sid))
+			c.JSON(http.StatusUnauthorized, httperrors.Unauthorized(httperrors.ErrUnauthorized))
 		}
 
 		user, err := mw.authUC.GetByID(ctx, sess.UserID)
 		if err != nil {
 			mw.lg.Error("AuthSessionMiddleware.authUC.GetByID", logger.Error(err), logger.String("cookie", sid))
-			c.JSON(http.StatusUnauthorized, httperrors.Unauthorized(httperrors.ErrorUnauthorized))
+			c.JSON(http.StatusUnauthorized, httperrors.Unauthorized(httperrors.ErrUnauthorized))
 		}
 
 		c.Set("sid", sid)
@@ -54,6 +55,5 @@ func (mw *Wrapper) AuthSessionMiddleware() gin.HandlerFunc {
 			logger.String("CookieSessionID", cookie))
 
 		c.Next()
-		return
 	}
 }

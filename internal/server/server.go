@@ -15,11 +15,12 @@ import (
 )
 
 const (
-	_certFile  = "ssl/server.crt"
-	_keyFile   = "ssl/server.key"
+	certFile   = "ssl/server.crt"
+	keyFile    = "ssl/server.key"
 	ctxTimeout = 5
 )
 
+// Server is HTTP server interface
 type Server interface {
 	Run() error
 }
@@ -32,6 +33,7 @@ type server struct {
 	redisClient *redis.Client
 }
 
+// NewServer creates a new server
 func NewServer(
 	cfg *config.Config, lg logger.Logger, db *sql.DB, redisClient *redis.Client,
 ) Server {
@@ -45,6 +47,7 @@ func NewServer(
 	}
 }
 
+// Run runs the server
 func (s *server) Run() error {
 	if err := s.Handle(s.gin); err != nil {
 		s.lg.Error("Handle error", logger.Error(err))
@@ -58,7 +61,7 @@ func (s *server) Run() error {
 
 		go func() {
 			s.lg.Info("TLS Server is listening", logger.String("port", s.cfg.Server.Port))
-			if err := srv.ListenAndServeTLS(_certFile, _keyFile); err != nil {
+			if err := srv.ListenAndServeTLS(certFile, keyFile); err != nil {
 				s.lg.Fatal("Error starting TLS server", logger.Error(err))
 			}
 		}()

@@ -34,6 +34,7 @@ func (s *sessionRepo) CreateSession(ctx context.Context, sess *models.Session, e
 	if err != nil {
 		return "", errors.Wrap(err, "sessionRepo.CreateSession.json.Marshal")
 	}
+
 	if err := s.redisClient.Set(ctx, sessionKey, sessBytes, time.Second*time.Duration(expiration)).Err(); err != nil {
 		return "", errors.Wrap(err, "sessionRepo.CreateSession.redisClient.Set")
 	}
@@ -41,15 +42,15 @@ func (s *sessionRepo) CreateSession(ctx context.Context, sess *models.Session, e
 }
 
 // GetSessionById returns a session
-func (s *sessionRepo) GetSessionById(ctx context.Context, id string) (*models.Session, error) {
+func (s *sessionRepo) GetSessionByID(ctx context.Context, id string) (*models.Session, error) {
 	sessBytes, err := s.redisClient.Get(ctx, id).Bytes()
 	if err != nil {
-		return nil, errors.Wrap(err, "sessionRepo.GetSessionById.redisClient.Get")
+		return nil, errors.Wrap(err, "sessionRepo.GetSessionByID.redisClient.Get")
 	}
 
 	sess := &models.Session{}
 	if err := json.Unmarshal(sessBytes, sess); err != nil {
-		return nil, errors.Wrap(err, "sessionRepo.GetSessionById.json.Unmarshal")
+		return nil, errors.Wrap(err, "sessionRepo.GetSessionByID.json.Unmarshal")
 	}
 
 	return sess, nil
