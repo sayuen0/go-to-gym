@@ -14,10 +14,11 @@ import (
 func (s *server) Handle(r *gin.Engine) error {
 	// TODO: init repositories
 	authRp := authRepo.NewAuthRepo(s.db)
+	authRedisRp := authRepo.NewRedisRepo(s.redisClient)
 	sessRp := sessRepo.NewSessionRepository(s.redisClient, s.cfg)
 
 	// TODO init use cases
-	authUC := authUseCase.NewAuthUseCase(s.cfg, s.lg, authRp)
+	authUC := authUseCase.NewAuthUseCase(s.cfg, s.lg, authRp, authRedisRp)
 	sessUC := sessUseCase.NewSessionUseCase(s.cfg, sessRp)
 
 	// TODO use middlewares

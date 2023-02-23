@@ -71,7 +71,7 @@ type User struct {
 
 func NewUser(e *db.User) *User {
 	return &User{
-		UserID: e.UUID,
+		UserID: e.UserID,
 		Name:   e.Name,
 		Email:  e.Email,
 	}

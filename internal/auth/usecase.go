@@ -10,4 +10,5 @@ type UseCase interface {
 	Register(ctx context.Context, user *models.UserCreateRequest) (*models.UserWithToken, error)
 	Login(ctx context.Context, user *models.UserLoginRequest) (*models.UserWithToken, error)
 	GetUsers(ctx context.Context, req *utils.PaginationRequest) (*models.UsersList, error)
+	GetByID(ctx context.Context, uuid string) (*models.User, error)
 }

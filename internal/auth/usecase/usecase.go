@@ -11,16 +11,27 @@ import (
 	"github.com/sayuen0/go-to-gym/pkg/utils"
 )
 
+const (
+	cacheDuration = 3600 * 3
+)
+
 type authUC struct {
-	cfg      *config.Config
-	lg       logger.Logger
-	authRepo auth.Repository
+	cfg       *config.Config
+	lg        logger.Logger
+	authRepo  auth.Repository
+	redisRepo auth.RedisRepository
 }
 
-func NewAuthUseCase(cfg *config.Config, lg logger.Logger, authRepo auth.Repository) auth.UseCase {
-	return &authUC{cfg: cfg, lg: lg, authRepo: authRepo}
+// NewAuthUseCase is a constructor for authUC
+func NewAuthUseCase(
+	cfg *config.Config,
+	lg logger.Logger,
+	authRepo auth.Repository,
+	redisRepo auth.RedisRepository) auth.UseCase {
+	return &authUC{cfg: cfg, lg: lg, authRepo: authRepo, redisRepo: redisRepo}
 }
 
+// Register registers a new user
 func (u *authUC) Register(ctx context.Context, req *models.UserCreateRequest) (*models.UserWithToken, error) {
 	existsUser, err := u.authRepo.FindByEmail(ctx, req.Email)
 	if existsUser != nil && err == nil {
@@ -36,7 +47,7 @@ func (u *authUC) Register(ctx context.Context, req *models.UserCreateRequest) (*
 		return nil, err
 	}
 
-	token, err := utils.GenerateJWTToken(createdUser.Email, createdUser.UUID, u.cfg)
+	token, err := utils.GenerateJWTToken(createdUser.Email, createdUser.UserID, u.cfg)
 	if err != nil {
 		return nil, httperrors.InternalServerError(errors.Wrap(err, "authUC.Register.GenerateJWTToken"))
 	}
@@ -58,7 +69,7 @@ func (u *authUC) Login(ctx context.Context, req *models.UserLoginRequest) (*mode
 		return nil, httperrors.Unauthorized(errors.Wrap(err, "authUC.Login.CompareUserPassword"))
 	}
 
-	token, err := utils.GenerateJWTToken(dbUser.Email, dbUser.UUID, u.cfg)
+	token, err := utils.GenerateJWTToken(dbUser.Email, dbUser.UserID, u.cfg)
 	if err != nil {
 		return nil, httperrors.InternalServerError(errors.Wrap(err, "authUC.GetUsers.GenerateJWTToken"))
 	}
@@ -85,4 +96,27 @@ func (u *authUC) GetUsers(ctx context.Context, req *utils.PaginationRequest) (*m
 		Size:  req.Size,
 		Total: totalCount,
 	}), nil
+}
+
+// GetByID returns a user found by its UUID
+func (u *authUC) GetByID(ctx context.Context, userID string) (*models.User, error) {
+	cachedUser, err := u.redisRepo.GetByID(ctx, userID)
+	if err != nil {
+		u.lg.Error("authUC.GetByID.redisRepo.GetByID", logger.Error(err))
+	}
+	if cachedUser != nil {
+		return cachedUser, nil
+	}
+
+	user, err := u.authRepo.GetByID(ctx, userID)
+	if err != nil {
+		return nil, err
+	}
+
+	userModel := models.NewUser(user)
+	if err := u.redisRepo.SetUser(ctx, userID, cacheDuration, userModel); err != nil {
+		u.lg.Error("authUC.GetByID.SetUser", logger.Error(err))
+	}
+
+	return userModel, nil
 }

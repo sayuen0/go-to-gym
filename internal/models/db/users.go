@@ -25,7 +25,7 @@ import (
 // User is an object representing the database table.
 type User struct {
 	ID             int        `boil:"id" json:"id" toml:"id" yaml:"id"`
-	UUID           string     `boil:"uuid" json:"uuid" toml:"uuid" yaml:"uuid"`
+	UserID         string     `boil:"user_id" json:"user_id" toml:"user_id" yaml:"user_id"`
 	Name           string     `boil:"name" json:"name" toml:"name" yaml:"name"`
 	Email          string     `boil:"email" json:"email" toml:"email" yaml:"email"`
 	Admin          UsersAdmin `boil:"admin" json:"admin" toml:"admin" yaml:"admin"`
@@ -40,7 +40,7 @@ type User struct {
 
 var UserColumns = struct {
 	ID             string
-	UUID           string
+	UserID         string
 	Name           string
 	Email          string
 	Admin          string
@@ -50,7 +50,7 @@ var UserColumns = struct {
 	DeletedAt      string
 }{
 	ID:             "id",
-	UUID:           "uuid",
+	UserID:         "user_id",
 	Name:           "name",
 	Email:          "email",
 	Admin:          "admin",
@@ -62,7 +62,7 @@ var UserColumns = struct {
 
 var UserTableColumns = struct {
 	ID             string
-	UUID           string
+	UserID         string
 	Name           string
 	Email          string
 	Admin          string
@@ -72,7 +72,7 @@ var UserTableColumns = struct {
 	DeletedAt      string
 }{
 	ID:             "users.id",
-	UUID:           "users.uuid",
+	UserID:         "users.user_id",
 	Name:           "users.name",
 	Email:          "users.email",
 	Admin:          "users.admin",
@@ -212,7 +212,7 @@ func (w whereHelpernull_Time) IsNotNull() qm.QueryMod { return qmhelper.WhereIsN
 
 var UserWhere = struct {
 	ID             whereHelperint
-	UUID           whereHelperstring
+	UserID         whereHelperstring
 	Name           whereHelperstring
 	Email          whereHelperstring
 	Admin          whereHelperUsersAdmin
@@ -222,7 +222,7 @@ var UserWhere = struct {
 	DeletedAt      whereHelpernull_Time
 }{
 	ID:             whereHelperint{field: "`users`.`id`"},
-	UUID:           whereHelperstring{field: "`users`.`uuid`"},
+	UserID:         whereHelperstring{field: "`users`.`user_id`"},
 	Name:           whereHelperstring{field: "`users`.`name`"},
 	Email:          whereHelperstring{field: "`users`.`email`"},
 	Admin:          whereHelperUsersAdmin{field: "`users`.`admin`"},
@@ -249,8 +249,8 @@ func (*userR) NewStruct() *userR {
 type userL struct{}
 
 var (
-	userAllColumns            = []string{"id", "uuid", "name", "email", "admin", "hashed_password", "created_at", "updated_at", "deleted_at"}
-	userColumnsWithoutDefault = []string{"uuid", "name", "email", "hashed_password", "deleted_at"}
+	userAllColumns            = []string{"id", "user_id", "name", "email", "admin", "hashed_password", "created_at", "updated_at", "deleted_at"}
+	userColumnsWithoutDefault = []string{"user_id", "name", "email", "hashed_password", "deleted_at"}
 	userColumnsWithDefault    = []string{"id", "admin", "created_at", "updated_at"}
 	userPrimaryKeyColumns     = []string{"id"}
 	userGeneratedColumns      = []string{}

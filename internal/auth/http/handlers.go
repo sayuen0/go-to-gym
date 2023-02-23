@@ -190,9 +190,31 @@ func (h *authHandlers) GetUsers() gin.HandlerFunc {
 	}
 }
 
+// GetUserByID godoc
+// @Summary get user by id
+// @Description get string by ID
+// @Tags Auth
+// @Accept  json
+// @Produce  json
+// @Param id path int true "user_id"
+// @Success 200 {object} models.User
+// @Failure 500 {object} httpErrors.RestError
+// @Router /auth/{id} [get]
 func (h *authHandlers) GetUserByID() gin.HandlerFunc {
-	//TODO implement me
-	panic("implement me")
+	return func(c *gin.Context) {
+		ctx := utils.GetRequestCtx(c)
+		uuid := c.Param("user_id")
+
+		user, err := h.uc.GetByID(ctx, uuid)
+		if err != nil {
+			utils.LogResponseError(c, h.lg, err)
+			c.JSON(httperrors.ErrorResponse(err))
+			return
+		}
+
+		c.JSON(http.StatusOK, user)
+		return
+	}
 }
 
 func (h *authHandlers) GetMe() gin.HandlerFunc {

@@ -12,4 +12,5 @@ type Repository interface {
 	FindByEmail(ctx context.Context, email string) (*db.User, error)
 	GetUsers(ctx context.Context, req *utils.PaginationRequest) ([]*db.User, error)
 	GetCount(ctx context.Context) (int64, error)
+	GetByID(ctx context.Context, userID string) (*db.User, error)
 }

@@ -5,6 +5,7 @@ server:
     SSL: true
     CSRF: true
     Debug: true
+    Salt:
 
 db:
     DBName: go_to_gym
