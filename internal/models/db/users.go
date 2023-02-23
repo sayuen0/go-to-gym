@@ -30,6 +30,7 @@ type User struct {
 	Email          string     `boil:"email" json:"email" toml:"email" yaml:"email"`
 	Admin          UsersAdmin `boil:"admin" json:"admin" toml:"admin" yaml:"admin"`
 	HashedPassword string     `boil:"hashed_password" json:"hashed_password" toml:"hashed_password" yaml:"hashed_password"`
+	Salt           string     `boil:"salt" json:"salt" toml:"salt" yaml:"salt"`
 	CreatedAt      time.Time  `boil:"created_at" json:"created_at" toml:"created_at" yaml:"created_at"`
 	UpdatedAt      time.Time  `boil:"updated_at" json:"updated_at" toml:"updated_at" yaml:"updated_at"`
 	DeletedAt      null.Time  `boil:"deleted_at" json:"deleted_at,omitempty" toml:"deleted_at" yaml:"deleted_at,omitempty"`
@@ -45,6 +46,7 @@ var UserColumns = struct {
 	Email          string
 	Admin          string
 	HashedPassword string
+	Salt           string
 	CreatedAt      string
 	UpdatedAt      string
 	DeletedAt      string
@@ -55,6 +57,7 @@ var UserColumns = struct {
 	Email:          "email",
 	Admin:          "admin",
 	HashedPassword: "hashed_password",
+	Salt:           "salt",
 	CreatedAt:      "created_at",
 	UpdatedAt:      "updated_at",
 	DeletedAt:      "deleted_at",
@@ -67,6 +70,7 @@ var UserTableColumns = struct {
 	Email          string
 	Admin          string
 	HashedPassword string
+	Salt           string
 	CreatedAt      string
 	UpdatedAt      string
 	DeletedAt      string
@@ -77,6 +81,7 @@ var UserTableColumns = struct {
 	Email:          "users.email",
 	Admin:          "users.admin",
 	HashedPassword: "users.hashed_password",
+	Salt:           "users.salt",
 	CreatedAt:      "users.created_at",
 	UpdatedAt:      "users.updated_at",
 	DeletedAt:      "users.deleted_at",
@@ -217,6 +222,7 @@ var UserWhere = struct {
 	Email          whereHelperstring
 	Admin          whereHelperUsersAdmin
 	HashedPassword whereHelperstring
+	Salt           whereHelperstring
 	CreatedAt      whereHelpertime_Time
 	UpdatedAt      whereHelpertime_Time
 	DeletedAt      whereHelpernull_Time
@@ -227,6 +233,7 @@ var UserWhere = struct {
 	Email:          whereHelperstring{field: "`users`.`email`"},
 	Admin:          whereHelperUsersAdmin{field: "`users`.`admin`"},
 	HashedPassword: whereHelperstring{field: "`users`.`hashed_password`"},
+	Salt:           whereHelperstring{field: "`users`.`salt`"},
 	CreatedAt:      whereHelpertime_Time{field: "`users`.`created_at`"},
 	UpdatedAt:      whereHelpertime_Time{field: "`users`.`updated_at`"},
 	DeletedAt:      whereHelpernull_Time{field: "`users`.`deleted_at`"},
@@ -249,8 +256,8 @@ func (*userR) NewStruct() *userR {
 type userL struct{}
 
 var (
-	userAllColumns            = []string{"id", "user_id", "name", "email", "admin", "hashed_password", "created_at", "updated_at", "deleted_at"}
-	userColumnsWithoutDefault = []string{"user_id", "name", "email", "hashed_password", "deleted_at"}
+	userAllColumns            = []string{"id", "user_id", "name", "email", "admin", "hashed_password", "salt", "created_at", "updated_at", "deleted_at"}
+	userColumnsWithoutDefault = []string{"user_id", "name", "email", "hashed_password", "salt", "deleted_at"}
 	userColumnsWithDefault    = []string{"id", "admin", "created_at", "updated_at"}
 	userPrimaryKeyColumns     = []string{"id"}
 	userGeneratedColumns      = []string{}

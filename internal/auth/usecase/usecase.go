@@ -65,8 +65,12 @@ func (u *authUC) Login(ctx context.Context, req *models.UserLoginRequest) (*mode
 		return nil, err
 	}
 
-	if err := models.CompareUserPassword(req.Password, dbUser.HashedPassword); err != nil {
-		return nil, httperrors.Unauthorized(errors.Wrap(err, "authUC.Login.CompareUserPassword"))
+	password := utils.PasswordVerifier{
+		Salt:   dbUser.Salt,
+		Pepper: u.cfg.Server.Pepper,
+	}
+	if err := password.ComparePassword(req.Password, dbUser.HashedPassword); err != nil {
+		return nil, httperrors.Unauthorized(errors.Wrap(err, "authUC.Login.ComparePassword"))
 	}
 
 	token, err := utils.GenerateJWTToken(dbUser.Email, dbUser.UserID, u.cfg)

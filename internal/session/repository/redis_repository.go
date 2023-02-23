@@ -18,7 +18,7 @@ type sessionRepo struct {
 	cfg         *config.Config
 }
 
-func NewSessionRepository(redisClient *redis.Client, cfg *config.Config) session.Repository {
+func NewSessionRepo(redisClient *redis.Client, cfg *config.Config) session.Repository {
 	return &sessionRepo{
 		redisClient: redisClient, cfg: cfg,
 	}

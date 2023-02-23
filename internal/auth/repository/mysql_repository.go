@@ -4,6 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"github.com/pkg/errors"
+	"github.com/sayuen0/go-to-gym/config"
 	"github.com/sayuen0/go-to-gym/internal/auth"
 	"github.com/sayuen0/go-to-gym/internal/models"
 	"github.com/sayuen0/go-to-gym/internal/models/db"
@@ -13,21 +14,33 @@ import (
 )
 
 type authRepo struct {
-	db *sql.DB
+	cfg *config.Config
+	db  *sql.DB
 }
 
 // NewAuthRepo is a constructor of auth.Repository
-func NewAuthRepo(db *sql.DB) auth.Repository {
-	return &authRepo{db: db}
+func NewAuthRepo(cfg *config.Config, db *sql.DB) auth.Repository {
+	return &authRepo{cfg: cfg, db: db}
 }
 
 // Register inserts a new user record
-func (r *authRepo) Register(ctx context.Context, user *models.UserCreateRequest) (*db.User, error) {
+func (r *authRepo) Register(ctx context.Context, req *models.UserCreateRequest) (*db.User, error) {
+	salt := utils.GenerateSalt()
+	password := utils.PasswordVerifier{
+		Pepper: r.cfg.Server.Pepper,
+		Salt:   salt,
+	}
+	hashedPassword, err := password.HashPassword(req.Password)
+	if err != nil {
+		return nil, errors.Wrap(err, "authRepo.Register.HashPassword")
+	}
+
 	u := &db.User{
 		UserID:         utils.NewUUIDStr(),
-		Name:           user.Name,
-		Email:          user.Email,
-		HashedPassword: user.HashedPassword,
+		Name:           req.Name,
+		Email:          req.Email,
+		Salt:           salt,
+		HashedPassword: hashedPassword,
 	}
 
 	if err := u.Insert(ctx, r.db, boil.Infer()); err != nil {

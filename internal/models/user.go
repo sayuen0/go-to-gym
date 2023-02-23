@@ -2,7 +2,6 @@ package models
 
 import (
 	"github.com/sayuen0/go-to-gym/internal/models/db"
-	"golang.org/x/crypto/bcrypt"
 	"strings"
 )
 
@@ -13,32 +12,15 @@ import (
 
 // UserCreateRequest represents user create/register request
 type UserCreateRequest struct {
-	Name           string `json:"name" validate:"required"`
-	Email          string `json:"email" validate:"required"`
-	Password       string `json:"password" validate:"required"`
-	HashedPassword string `json:"-"`
+	Name     string `json:"name" validate:"required"`
+	Email    string `json:"email" validate:"required"`
+	Password string `json:"password" validate:"required"`
 }
 
 // PrepareForCreate formats its auth info
 func (u *UserCreateRequest) PrepareForCreate() error {
 	u.Email = strings.ToLower(strings.TrimSpace(u.Email))
 	u.Password = strings.TrimSpace(u.Password)
-
-	if err := u.HashPassword(); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-// HashPassword hashes its password string
-func (u *UserCreateRequest) HashPassword() error {
-	hashed, err := bcrypt.GenerateFromPassword([]byte(u.Password), bcrypt.DefaultCost)
-	if err != nil {
-		return err
-	}
-
-	u.HashedPassword = string(hashed)
 	return nil
 }
 
@@ -114,15 +96,4 @@ func NewUsersList(users []*db.User, p Paging) *UsersList {
 		list.Users = append(list.Users, NewUser(u))
 	}
 	return list
-}
-
-// ---------------------------------------------------------------------------------------------------------------------
-// utils
-
-// CompareUserPassword returns an error if the hash of inputPassword is not equal to hashedPassword
-func CompareUserPassword(inputPassword, hashedPassword string) error {
-	if err := bcrypt.CompareHashAndPassword([]byte(hashedPassword), []byte(inputPassword)); err != nil {
-		return err
-	}
-	return nil
 }
