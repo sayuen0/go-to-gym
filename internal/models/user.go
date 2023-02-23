@@ -9,6 +9,8 @@ import (
 // ---------------------------------------------------------------------------------------------------------------------
 // user create request
 
+// TODO: パスワード周り全部外出しした方がいい
+
 // UserCreateRequest represents user create/register request
 type UserCreateRequest struct {
 	Name           string `json:"name" validate:"required"`

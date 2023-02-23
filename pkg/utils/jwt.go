@@ -10,12 +10,14 @@ const (
 	jwtExpiresMinutes = 3 * 60
 )
 
+// Claims is a wrapper of jwt.StandardClaims with auth info
 type Claims struct {
 	Email string `json:"email"`
 	ID    string `json:"id"`
 	jwt.StandardClaims
 }
 
+// GenerateJWTToken returns a Claims object
 func GenerateJWTToken(email string, userID string, config *config.Config) (string, error) {
 	claims := &Claims{
 		Email: email,
