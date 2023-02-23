@@ -50,5 +50,6 @@ func GetConnection(c *config.Config) *sql.DB {
 
 		_db = db
 	}
+
 	return _db
 }

@@ -19,14 +19,17 @@ import (
 // @basePath /
 func main() {
 	configPath := utils.GetConfigPath(os.Getenv("config"))
+
 	viperConfig, err := config.LoadConfig(configPath)
 	if err != nil {
 		log.Fatalf("LoadConfig: %v", err)
 	}
+
 	cfg, err := config.ParseConfig(viperConfig)
 	if err != nil {
 		log.Fatalf("ParseConfig: %v", err)
 	}
+
 	zl, err := logger.NewLogger()
 	if err != nil {
 		log.Fatalf("NewLogger: %v", err)

@@ -23,6 +23,7 @@ func MakeToken(sid string, lg logger.Logger) string {
 	}
 
 	token := base64.RawStdEncoding.EncodeToString(hash.Sum(nil))
+
 	return token
 }
 

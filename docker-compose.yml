@@ -19,6 +19,7 @@ services:
     restart: always
     networks:
       - web_api
+
   mysql:
     image: mysql:8.0.27
     platform: linux/amd64 # この行がないとM1 MacではPullできない

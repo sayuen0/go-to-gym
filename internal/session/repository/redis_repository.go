@@ -39,6 +39,7 @@ func (s *sessionRepo) CreateSession(ctx context.Context, sess *models.Session, e
 	if err := s.redisClient.Set(ctx, sessionKey, sessBytes, time.Second*time.Duration(expiration)).Err(); err != nil {
 		return "", errors.Wrap(err, "sessionRepo.CreateSession.redisClient.Set")
 	}
+
 	return sessionKey, nil
 }
 
@@ -62,6 +63,7 @@ func (s *sessionRepo) DeleteByID(ctx context.Context, id string) error {
 	if err := s.redisClient.Del(ctx, id).Err(); err != nil {
 		return errors.Wrap(err, "sessionRepo.DeleteByID")
 	}
+
 	return nil
 }
 

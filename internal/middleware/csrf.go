@@ -15,6 +15,7 @@ func (mw *Wrapper) CSRF() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		if !mw.cfg.Server.CSRF {
 			c.Next()
+
 			return
 		}
 
@@ -24,12 +25,14 @@ func (mw *Wrapper) CSRF() gin.HandlerFunc {
 				logger.String("token", token),
 				logger.Error(errors.New("empty CSRF token")))
 			c.JSON(http.StatusForbidden, httperrors.NewRestError(http.StatusForbidden, "Invalid CSRF token", "no CSRF token"))
+
 			return
 		}
 
 		sid, found := c.Get("sid")
 		if !found {
 			c.JSON(http.StatusUnauthorized, httperrors.NewRestError(http.StatusUnauthorized, "sid not found", ""))
+
 			return
 		}
 
@@ -37,6 +40,7 @@ func (mw *Wrapper) CSRF() gin.HandlerFunc {
 			mw.lg.Error("CSRF Middleware csrf.ValidToken",
 				logger.String("token", token))
 			c.JSON(http.StatusForbidden, httperrors.NewRestError(http.StatusForbidden, "Invalid CSRF token", "no CSRF token"))
+
 			return
 		}
 

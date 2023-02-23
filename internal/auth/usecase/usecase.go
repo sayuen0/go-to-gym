@@ -92,8 +92,8 @@ func (u *authUC) GetUsers(ctx context.Context, req *utils.PaginationRequest) (*m
 	if err != nil {
 		return nil, errors.Wrap(err, "authRepo.GetUsers.GetCount")
 	}
-	users, err := u.authRepo.GetUsers(ctx, req)
 
+	users, err := u.authRepo.GetUsers(ctx, req)
 	if err != nil {
 		return nil, err
 	}

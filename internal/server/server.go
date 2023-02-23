@@ -39,6 +39,7 @@ func NewServer(
 	cfg *config.Config, lg logger.Logger, db *sql.DB, redisClient *redis.Client,
 ) Server {
 	r := gin.Default()
+
 	return &server{
 		gin:         r,
 		cfg:         cfg,
@@ -62,19 +63,17 @@ func (s *server) Run() error {
 	}
 
 	if s.cfg.Server.SSL {
-		// TODO: set read & write timeout
-
 		go func() {
 			s.lg.Info("TLS Server is listening", logger.String("port", s.cfg.Server.Port))
+
 			if err := srv.ListenAndServeTLS(certFile, keyFile); err != nil {
 				s.lg.Fatal("Error starting TLS server", logger.Error(err))
 			}
 		}()
 	} else {
-		// TODO: set read & write timeout
-
 		go func() {
 			s.lg.Info("Server is listening", logger.String("port", s.cfg.Server.Port))
+
 			if err := srv.ListenAndServe(); err != nil {
 				s.lg.Fatal("Error starting server", logger.Error(err))
 			}
@@ -84,10 +83,12 @@ func (s *server) Run() error {
 	// graceful shutdown
 	quit := make(chan os.Signal, 1)
 	signal.Notify(quit, os.Interrupt, syscall.SIGTERM)
-
 	<-quit
+
 	ctx, shutdown := context.WithTimeout(context.Background(), ctxTimeout*time.Second)
 	defer shutdown()
+
 	s.lg.Info("Server is Shutting down")
+
 	return srv.Shutdown(ctx)
 }

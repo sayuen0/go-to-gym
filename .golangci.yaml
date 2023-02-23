@@ -11,6 +11,8 @@ linters:
     - gochecknoinits
     - godot
     - godox
+    - durationcheck
+    - goerr113
     # deprecated linters
     - golint
     - interfacer

@@ -34,5 +34,6 @@ func GenerateJWTToken(email string, userID string, config *config.Config) (strin
 	if err != nil {
 		return "", err
 	}
+
 	return tokenString, nil
 }

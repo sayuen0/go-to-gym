@@ -66,6 +66,7 @@ func ReadRequest(c *gin.Context, request any) error {
 	if err := c.Bind(request); err != nil {
 		return err
 	}
+
 	return ValidateStruct(c.Request.Context(), request)
 }
 

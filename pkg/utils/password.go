@@ -37,6 +37,7 @@ func (s PasswordVerifier) ComparePassword(
 		[]byte(hashedPassword), []byte(s.getSeasonedPassword(inputPassword))); err != nil {
 		return err
 	}
+
 	return nil
 }
 

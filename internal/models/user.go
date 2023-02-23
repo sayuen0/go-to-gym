@@ -97,5 +97,6 @@ func NewUsersList(users []*db.User, p Paging) *UsersList {
 	for _, u := range users {
 		list.Users = append(list.Users, NewUser(u))
 	}
+
 	return list
 }

@@ -54,6 +54,7 @@ func (r *authRedisRepo) SetUser(ctx context.Context, userID string, duration int
 		userBytes, time.Second*time.Duration(duration)).Err(); err != nil {
 		return errors.Wrap(err, "authRedisRepo.SetUser.redis.Client.Set")
 	}
+
 	return nil
 }
 

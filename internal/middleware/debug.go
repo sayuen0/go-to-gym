@@ -14,6 +14,7 @@ func (mw *Wrapper) DebugMiddleware() gin.HandlerFunc {
 		dump, err := httputil.DumpRequestOut(c.Request, true)
 		if err != nil {
 			c.Status(http.StatusInternalServerError)
+
 			return
 		}
 

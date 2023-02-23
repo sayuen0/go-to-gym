@@ -53,6 +53,7 @@ func (h *authHandlers) Register() gin.HandlerFunc {
 		user := &models.UserCreateRequest{}
 		if err := utils.ReadRequest(c, user); err != nil {
 			c.JSON(httperrors.ErrorResponse(err))
+
 			return
 		}
 
@@ -60,6 +61,7 @@ func (h *authHandlers) Register() gin.HandlerFunc {
 		if err != nil {
 			utils.LogResponseError(c, h.lg, err)
 			c.JSON(httperrors.ErrorResponse(err))
+
 			return
 		}
 
@@ -69,8 +71,10 @@ func (h *authHandlers) Register() gin.HandlerFunc {
 		if err != nil {
 			utils.LogResponseError(c, h.lg, err)
 			c.JSON(httperrors.ErrorResponse(err))
+
 			return
 		}
+
 		utils.CreateSessionCookie(c, h.cfg, sess)
 
 		c.JSON(http.StatusCreated, createdUser)
@@ -88,10 +92,12 @@ func (h *authHandlers) Register() gin.HandlerFunc {
 func (h *authHandlers) Login() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		ctx := c.Request.Context()
+
 		login := &models.UserLoginRequest{}
 		if err := utils.ReadRequest(c, login); err != nil {
 			utils.LogResponseError(c, h.lg, err)
 			c.JSON(httperrors.ErrorResponse(err))
+
 			return
 		}
 
@@ -102,6 +108,7 @@ func (h *authHandlers) Login() gin.HandlerFunc {
 		if err != nil {
 			utils.LogResponseError(c, h.lg, err)
 			c.JSON(httperrors.ErrorResponse(err))
+
 			return
 		}
 
@@ -111,10 +118,11 @@ func (h *authHandlers) Login() gin.HandlerFunc {
 		if err != nil {
 			utils.LogResponseError(c, h.lg, err)
 			c.JSON(httperrors.ErrorResponse(err))
+
 			return
 		}
-		utils.CreateSessionCookie(c, h.cfg, sess)
 
+		utils.CreateSessionCookie(c, h.cfg, sess)
 		c.JSON(http.StatusCreated, userWithToken)
 	}
 }
@@ -136,16 +144,20 @@ func (h *authHandlers) Logout() gin.HandlerFunc {
 		if err != nil {
 			if errors.Is(err, http.ErrNoCookie) {
 				c.JSON(http.StatusUnauthorized, httperrors.Unauthorized(err))
+
 				return
 			}
+
 			utils.LogResponseError(c, h.lg, err)
 			c.JSON(http.StatusInternalServerError, httperrors.InternalServerError(err))
+
 			return
 		}
 
 		if err := h.sessUC.DeleteByID(ctx, sessionID); err != nil {
 			utils.LogResponseError(c, h.lg, err)
 			c.JSON(httperrors.ErrorResponse(err))
+
 			return
 		}
 
@@ -169,10 +181,12 @@ func (h *authHandlers) Logout() gin.HandlerFunc {
 func (h *authHandlers) GetUsers() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		ctx := utils.GetRequestCtx(c)
+
 		paginationReq, err := utils.GetPaginationRequest(c)
 		if err != nil {
 			utils.LogResponseError(c, h.lg, err)
 			c.JSON(httperrors.ErrorResponse(err))
+
 			return
 		}
 
@@ -180,8 +194,10 @@ func (h *authHandlers) GetUsers() gin.HandlerFunc {
 		if err != nil {
 			utils.LogResponseError(c, h.lg, err)
 			c.JSON(httperrors.ErrorResponse(err))
+
 			return
 		}
+
 		c.JSON(http.StatusOK, users)
 	}
 }
@@ -205,6 +221,7 @@ func (h *authHandlers) GetUserByID() gin.HandlerFunc {
 		if err != nil {
 			utils.LogResponseError(c, h.lg, err)
 			c.JSON(httperrors.ErrorResponse(err))
+
 			return
 		}
 
@@ -227,12 +244,15 @@ func (h *authHandlers) GetMe() gin.HandlerFunc {
 		if !found {
 			utils.LogResponseError(c, h.lg, httperrors.Unauthorized(httperrors.ErrUnauthorized))
 			utils.ErrorResponseWithLog(c, h.lg, httperrors.Unauthorized(httperrors.ErrUnauthorized))
+
 			return
 		}
+
 		user, ok := u.(*models.User)
 		if !ok {
 			utils.LogResponseError(c, h.lg, httperrors.InternalServerError(httperrors.ErrInternalServerError))
 			utils.ErrorResponseWithLog(c, h.lg, httperrors.InternalServerError(httperrors.ErrInternalServerError))
+
 			return
 		}
 

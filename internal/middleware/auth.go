@@ -22,6 +22,7 @@ func (mw *Wrapper) AuthSessionMiddleware() gin.HandlerFunc {
 
 			if errors.Is(err, http.ErrNoCookie) {
 				c.JSON(http.StatusUnauthorized, httperrors.Unauthorized(err))
+
 				return
 			}
 

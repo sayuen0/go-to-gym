@@ -89,5 +89,6 @@ func (p *PaginationRequest) GenerateQueryMods() []qm.QueryMod {
 	if p.OrderBy != "" {
 		mods = append(mods, qm.OrderBy(p.GenerateOrderBy()))
 	}
+
 	return mods
 }
