@@ -5,7 +5,7 @@ server:
     SSL: true
     CSRF: true
     Debug: true
-    Salt:
+    Pepper: CW0aSI1FSBwq3JOaMvaG
 
 db:
     DBName: go_to_gym

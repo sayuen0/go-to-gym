@@ -9,6 +9,7 @@ import (
 // ---------------------------------------------------------------------------------------------------------------------
 // user create request
 
+// UserCreateRequest represents user create/register request
 type UserCreateRequest struct {
 	Name           string `json:"name" validate:"required"`
 	Email          string `json:"email" validate:"required"`
@@ -17,6 +18,7 @@ type UserCreateRequest struct {
 	// TODO: add birthday
 }
 
+// PrepareForCreate formats its auth info
 func (u *UserCreateRequest) PrepareForCreate() error {
 	u.Email = strings.ToLower(strings.TrimSpace(u.Email))
 	u.Password = strings.TrimSpace(u.Password)
@@ -28,6 +30,7 @@ func (u *UserCreateRequest) PrepareForCreate() error {
 	return nil
 }
 
+// HashPassword hashes its password string
 func (u *UserCreateRequest) HashPassword() error {
 	hashed, err := bcrypt.GenerateFromPassword([]byte(u.Password), bcrypt.DefaultCost)
 	if err != nil {
@@ -41,6 +44,7 @@ func (u *UserCreateRequest) HashPassword() error {
 // ---------------------------------------------------------------------------------------------------------------------
 // user login request
 
+// UserLoginRequest represents user login request
 type UserLoginRequest struct {
 	Email    string `json:"email" validate:"required"`
 	Password string `json:"password" validate:"required"`
@@ -49,6 +53,7 @@ type UserLoginRequest struct {
 // ---------------------------------------------------------------------------------------------------------------------
 // user update request
 
+// UserUpdateRequest represents user update request
 type UserUpdateRequest struct {
 	UserID         string  `json:"user_id" validate:"required"`
 	Name           string  `json:"name" validate:"required"`
@@ -63,12 +68,14 @@ type UserUpdateRequest struct {
 // ---------------------------------------------------------------------------------------------------------------------
 // user get response
 
+// User represents a response model of user
 type User struct {
 	UserID string `json:"user_id"`
 	Name   string `json:"name"`
 	Email  string `json:"email"`
 }
 
+// NewUser is a constructor of User
 func NewUser(e *db.User) *User {
 	return &User{
 		UserID: e.UserID,
@@ -77,11 +84,13 @@ func NewUser(e *db.User) *User {
 	}
 }
 
+// UserWithToken is a wrapper of User with Token
 type UserWithToken struct {
 	User  *User  `json:"user"`
 	Token string `json:"token"`
 }
 
+// NewUserWithToken is a constructor of UserWithToken
 func NewUserWithToken(e *db.User, token string) *UserWithToken {
 	return &UserWithToken{
 		User:  NewUser(e),
@@ -92,11 +101,13 @@ func NewUserWithToken(e *db.User, token string) *UserWithToken {
 // ---------------------------------------------------------------------------------------------------------------------
 // users list response
 
+// UsersList represents a response model of users list with paging information
 type UsersList struct {
 	Paging `json:"paging"`
 	Users  []*User `json:"users"`
 }
 
+// NewUsersList is a constructor of UsersList
 func NewUsersList(users []*db.User, p Paging) *UsersList {
 	list := &UsersList{Users: make([]*User, 0, len(users)), Paging: p}
 	for _, u := range users {
@@ -108,6 +119,7 @@ func NewUsersList(users []*db.User, p Paging) *UsersList {
 // ---------------------------------------------------------------------------------------------------------------------
 // utils
 
+// CompareUserPassword returns an error if the hash of inputPassword is not equal to hashedPassword
 func CompareUserPassword(inputPassword, hashedPassword string) error {
 	if err := bcrypt.CompareHashAndPassword([]byte(hashedPassword), []byte(inputPassword)); err != nil {
 		return err
