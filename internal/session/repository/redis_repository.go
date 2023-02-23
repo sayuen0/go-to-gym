@@ -4,13 +4,14 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"time"
+
 	"github.com/go-redis/redis/v8"
 	"github.com/pkg/errors"
 	"github.com/sayuen0/go-to-gym/config"
 	"github.com/sayuen0/go-to-gym/internal/models"
 	"github.com/sayuen0/go-to-gym/internal/session"
 	"github.com/sayuen0/go-to-gym/pkg/utils"
-	"time"
 )
 
 type sessionRepo struct {

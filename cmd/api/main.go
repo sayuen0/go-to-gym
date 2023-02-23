@@ -1,14 +1,15 @@
 package main
 
 import (
+	"log"
+	"os"
+
 	"github.com/sayuen0/go-to-gym/config"
 	"github.com/sayuen0/go-to-gym/internal/infrastructure/logger"
 	"github.com/sayuen0/go-to-gym/internal/server"
 	"github.com/sayuen0/go-to-gym/pkg/db/mysql"
 	"github.com/sayuen0/go-to-gym/pkg/db/redis"
 	"github.com/sayuen0/go-to-gym/pkg/utils"
-	"log"
-	"os"
 )
 
 // @title Go To Gym API

@@ -1,10 +1,11 @@
 package utils
 
 import (
-	"github.com/gin-gonic/gin"
-	"github.com/volatiletech/sqlboiler/v4/queries/qm"
 	"strconv"
 	"strings"
+
+	"github.com/gin-gonic/gin"
+	"github.com/volatiletech/sqlboiler/v4/queries/qm"
 )
 
 const (

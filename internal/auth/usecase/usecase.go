@@ -2,6 +2,7 @@ package usecase
 
 import (
 	"context"
+
 	"github.com/pkg/errors"
 	"github.com/sayuen0/go-to-gym/config"
 	"github.com/sayuen0/go-to-gym/internal/auth"
@@ -27,7 +28,8 @@ func NewAuthUseCase(
 	cfg *config.Config,
 	lg logger.Logger,
 	authRepo auth.Repository,
-	redisRepo auth.RedisRepository) auth.UseCase {
+	redisRepo auth.RedisRepository,
+) auth.UseCase {
 	return &authUC{cfg: cfg, lg: lg, authRepo: authRepo, redisRepo: redisRepo}
 }
 

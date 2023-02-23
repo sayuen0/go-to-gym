@@ -1,4 +1,4 @@
-.PHONY: local swaggo test
+.PHONY: local swaggo test fmt
 
 # ==============================================================================
 # Go migrate mysql
@@ -28,6 +28,10 @@ swaggo:
 
 lint:
 	golangci-lint run
+
+fmt:
+	gofumpt -l -w .
+
 
 # ==============================================================================
 # Main

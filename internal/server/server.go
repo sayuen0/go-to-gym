@@ -3,15 +3,16 @@ package server
 import (
 	"context"
 	"database/sql"
-	"github.com/gin-gonic/gin"
-	"github.com/go-redis/redis/v8"
-	"github.com/sayuen0/go-to-gym/config"
-	"github.com/sayuen0/go-to-gym/internal/infrastructure/logger"
 	"net/http"
 	"os"
 	"os/signal"
 	"syscall"
 	"time"
+
+	"github.com/gin-gonic/gin"
+	"github.com/go-redis/redis/v8"
+	"github.com/sayuen0/go-to-gym/config"
+	"github.com/sayuen0/go-to-gym/internal/infrastructure/logger"
 )
 
 const (

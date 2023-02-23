@@ -2,11 +2,12 @@ package middleware
 
 import (
 	"context"
+	"net/http"
+
 	"github.com/gin-gonic/gin"
 	"github.com/sayuen0/go-to-gym/internal/infrastructure/logger"
 	"github.com/sayuen0/go-to-gym/pkg/httperrors"
 	"github.com/sayuen0/go-to-gym/pkg/utils"
-	"net/http"
 )
 
 // AuthSessionMiddleware checks if user is logged in and if not then returns http.StatusUnauthorized

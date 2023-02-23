@@ -1,8 +1,9 @@
 package models
 
 import (
-	"github.com/sayuen0/go-to-gym/internal/models/db"
 	"strings"
+
+	"github.com/sayuen0/go-to-gym/internal/models/db"
 )
 
 // ---------------------------------------------------------------------------------------------------------------------

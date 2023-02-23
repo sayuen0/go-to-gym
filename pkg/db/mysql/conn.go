@@ -2,11 +2,12 @@ package mysql
 
 import (
 	"database/sql"
+	"log"
+	"time"
+
 	"github.com/go-sql-driver/mysql"
 	"github.com/sayuen0/go-to-gym/config"
 	"github.com/volatiletech/sqlboiler/v4/boil"
-	"log"
-	"time"
 )
 
 var _db *sql.DB

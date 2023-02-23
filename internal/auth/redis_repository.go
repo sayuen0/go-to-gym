@@ -2,6 +2,7 @@ package auth
 
 import (
 	"context"
+
 	"github.com/sayuen0/go-to-gym/internal/models"
 )
 

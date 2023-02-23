@@ -4,11 +4,12 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"time"
+
 	"github.com/go-redis/redis/v8"
 	"github.com/pkg/errors"
 	"github.com/sayuen0/go-to-gym/internal/auth"
 	"github.com/sayuen0/go-to-gym/internal/models"
-	"time"
 )
 
 const (

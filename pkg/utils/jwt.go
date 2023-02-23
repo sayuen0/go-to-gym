@@ -1,9 +1,10 @@
 package utils
 
 import (
+	"time"
+
 	"github.com/golang-jwt/jwt"
 	"github.com/sayuen0/go-to-gym/config"
-	"time"
 )
 
 const (

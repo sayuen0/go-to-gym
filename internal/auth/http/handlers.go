@@ -2,6 +2,8 @@ package http
 
 import (
 	"errors"
+	"net/http"
+
 	"github.com/gin-gonic/gin"
 	"github.com/sayuen0/go-to-gym/config"
 	"github.com/sayuen0/go-to-gym/internal/auth"
@@ -10,7 +12,6 @@ import (
 	"github.com/sayuen0/go-to-gym/internal/session"
 	"github.com/sayuen0/go-to-gym/pkg/httperrors"
 	"github.com/sayuen0/go-to-gym/pkg/utils"
-	"net/http"
 )
 
 // authHandlers auth handlers

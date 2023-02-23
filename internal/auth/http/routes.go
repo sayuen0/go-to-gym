@@ -14,6 +14,6 @@ func MapAuthRoutes(rg *gin.RouterGroup, h auth.Handlers, mw *middleware.Wrapper)
 	rg.GET("/:user_id", h.GetUserByID())
 	rg.Use(mw.AuthSessionMiddleware())
 	rg.GET("/me", h.GetMe())
-	//rg.PUT("/:user_id", h.Update())
-	//rg.DELETE("/:user_id", h.Delete())
+	// rg.PUT("/:user_id", h.Update())
+	// rg.DELETE("/:user_id", h.Delete())
 }

@@ -2,6 +2,7 @@ package usecase
 
 import (
 	"context"
+
 	"github.com/sayuen0/go-to-gym/config"
 	"github.com/sayuen0/go-to-gym/internal/models"
 	"github.com/sayuen0/go-to-gym/internal/session"

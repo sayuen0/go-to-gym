@@ -2,11 +2,12 @@ package middleware
 
 import (
 	"errors"
+	"net/http"
+
 	"github.com/gin-gonic/gin"
 	"github.com/sayuen0/go-to-gym/internal/infrastructure/logger"
 	"github.com/sayuen0/go-to-gym/pkg/csrf"
 	"github.com/sayuen0/go-to-gym/pkg/httperrors"
-	"net/http"
 )
 
 // CSRF requires request has csrf token

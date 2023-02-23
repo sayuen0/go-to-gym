@@ -4,8 +4,9 @@ import (
 	"crypto/sha256"
 	"encoding/base64"
 	"fmt"
-	"github.com/sayuen0/go-to-gym/internal/infrastructure/logger"
 	"io"
+
+	"github.com/sayuen0/go-to-gym/internal/infrastructure/logger"
 )
 
 const (

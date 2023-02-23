@@ -20,6 +20,7 @@ func NewMiddlewareWrapper(
 	cfg *config.Config,
 	lg logger.Logger,
 	sessUC session.UseCase,
-	authUC auth.UseCase) *Wrapper {
+	authUC auth.UseCase,
+) *Wrapper {
 	return &Wrapper{cfg: cfg, lg: lg, sessUC: sessUC, authUC: authUC}
 }

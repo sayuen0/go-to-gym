@@ -1,6 +1,8 @@
 package server
 
 import (
+	"net/http"
+
 	"github.com/gin-gonic/gin"
 	authHttp "github.com/sayuen0/go-to-gym/internal/auth/http"
 	authRepo "github.com/sayuen0/go-to-gym/internal/auth/repository"
@@ -8,7 +10,6 @@ import (
 	"github.com/sayuen0/go-to-gym/internal/middleware"
 	sessRepo "github.com/sayuen0/go-to-gym/internal/session/repository"
 	sessUseCase "github.com/sayuen0/go-to-gym/internal/session/usecase"
-	"net/http"
 )
 
 func (s *server) Handle(r *gin.Engine) error {

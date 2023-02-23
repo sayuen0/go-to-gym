@@ -2,6 +2,7 @@ package utils
 
 import (
 	"fmt"
+
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -30,7 +31,8 @@ func (s PasswordVerifier) HashPassword(rawPassword string) (string, error) {
 // ComparePassword returns an error if the hash of input password is not equal to its hashed password
 // TODO: 引数どっちがどっちかわからなくなるので、型をつけるなりして対処したい
 func (s PasswordVerifier) ComparePassword(
-	inputPassword, hashedPassword string) error {
+	inputPassword, hashedPassword string,
+) error {
 	if err := bcrypt.CompareHashAndPassword(
 		[]byte(hashedPassword), []byte(s.getSeasonedPassword(inputPassword))); err != nil {
 		return err

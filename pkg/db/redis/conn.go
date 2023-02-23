@@ -1,9 +1,10 @@
 package redis
 
 import (
+	"time"
+
 	"github.com/go-redis/redis/v8"
 	"github.com/sayuen0/go-to-gym/config"
-	"time"
 )
 
 // NewRedisClient return redis.Client
