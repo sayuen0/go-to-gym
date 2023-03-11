@@ -5,17 +5,27 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/gin-gonic/gin"
-	"github.com/magiconair/properties/assert"
 	"github.com/sayuen0/go-to-gym/config"
 	authmock "github.com/sayuen0/go-to-gym/internal/auth/mock"
 	"github.com/sayuen0/go-to-gym/internal/models"
 	sessmock "github.com/sayuen0/go-to-gym/internal/session/mock"
+	"github.com/stretchr/testify/assert"
 	"go.uber.org/zap/zaptest"
 	"net/http"
 	"net/http/httptest"
 	"strings"
 	"testing"
 )
+
+// TODO: 然るべきパッケージに配置
+func testCookie(t *testing.T, got []*http.Cookie, want *http.Cookie) {
+	for _, c := range got {
+		if c.Name == want.Name && c.Value == want.Value {
+			return
+		}
+	}
+	t.Errorf("cookie not found got %v, want %v", got, want)
+}
 
 func Test_authHandlers_Register(t *testing.T) {
 	type args struct {
@@ -29,6 +39,7 @@ func Test_authHandlers_Register(t *testing.T) {
 	type want struct {
 		status int
 		body   *models.UserWithToken
+		cookie *http.Cookie
 	}
 
 	tests := []struct {
@@ -51,10 +62,11 @@ func Test_authHandlers_Register(t *testing.T) {
 							UserID: "1",
 							Name:   "John Doe",
 							Email:  "john.doe@example.com",
-						}}, nil
+						},
+						Token: "token"}, nil
 				},
 				CreateFunc: func(ctx context.Context, sess *models.Session, expires int) (string, error) {
-					return "", nil
+					return "session", nil
 				},
 			},
 			want: want{
@@ -64,7 +76,13 @@ func Test_authHandlers_Register(t *testing.T) {
 						UserID: "1",
 						Name:   "John Doe",
 						Email:  "john.doe@example.com",
-					}},
+					},
+					Token: "token",
+				},
+				cookie: &http.Cookie{
+					Name:  "session-id",
+					Value: "session",
+				},
 			},
 		},
 	}
@@ -81,7 +99,7 @@ func Test_authHandlers_Register(t *testing.T) {
 			}
 
 			h := NewAuthHandlers(
-				&config.Config{},
+				&config.Config{Session: config.SessionConfig{Name: "session-id"}},
 				lg,
 				uc,
 				sessUC,
@@ -105,6 +123,9 @@ func Test_authHandlers_Register(t *testing.T) {
 
 			assert.Equal(t, got, tt.want.body)
 
+			// cookie
+			cookies := w.Result().Cookies()
+			testCookie(t, cookies, tt.want.cookie)
 		})
 	}
 }

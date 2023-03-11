@@ -74,14 +74,6 @@ type UserWithToken struct {
 	Token string `json:"token"`
 }
 
-// NewUserWithToken is a constructor of UserWithToken
-func NewUserWithToken(e *db.User, token string) *UserWithToken {
-	return &UserWithToken{
-		User:  NewUser(e),
-		Token: token,
-	}
-}
-
 // ---------------------------------------------------------------------------------------------------------------------
 // users list response
 

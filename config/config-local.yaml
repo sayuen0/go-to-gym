@@ -39,5 +39,5 @@ cookie:
     MaxAge: 86400
     Path: /
     Domain: localhost
-    Secure: false
+    Secure: true
     HttpOnly: true
