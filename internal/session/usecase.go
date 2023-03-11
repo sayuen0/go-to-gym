@@ -1,4 +1,4 @@
-//go:generate moq -out ./moq/${GOFILE} -pkg mock . UseCase
+//go:generate moq -out ./mock/${GOFILE} -pkg mock . UseCase
 package session
 
 import (

@@ -1,3 +1,4 @@
+//go:generate moq -out ./mock/${GOFILE} -pkg mock . UseCase
 package auth
 
 import (

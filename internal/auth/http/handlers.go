@@ -52,7 +52,7 @@ func (h *authHandlers) Register() gin.HandlerFunc {
 
 		user := &models.UserCreateRequest{}
 		if err := utils.ReadRequest(c, user); err != nil {
-			c.JSON(httperrors.ErrorResponse(err))
+			c.JSON(http.StatusBadRequest, httperrors.BadRequest(err))
 
 			return
 		}
