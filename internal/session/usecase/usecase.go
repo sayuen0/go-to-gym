@@ -22,8 +22,8 @@ func NewSessionUseCase(cfg *config.Config, rp session.Repository) session.UseCas
 }
 
 // CreateSession creates a new session with the given session information and expiration
-func (u *sessionUC) CreateSession(ctx context.Context, sess *models.Session, expires int) (string, error) {
-	return u.rp.CreateSession(ctx, sess, expires)
+func (u *sessionUC) Create(ctx context.Context, sess *models.Session, expires int) (string, error) {
+	return u.rp.Create(ctx, sess, expires)
 }
 
 // DeleteByID deletes the session with the given ID.
@@ -32,6 +32,6 @@ func (u *sessionUC) DeleteByID(ctx context.Context, id string) error {
 }
 
 // GetSessionByID retrieves the session with the given ID.
-func (u *sessionUC) GetSessionByID(ctx context.Context, id string) (*models.Session, error) {
-	return u.rp.GetSessionByID(ctx, id)
+func (u *sessionUC) GetByID(ctx context.Context, id string) (*models.Session, error) {
+	return u.rp.GetByID(ctx, id)
 }

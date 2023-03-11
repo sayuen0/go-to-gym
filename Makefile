@@ -1,4 +1,4 @@
-.PHONY: local swaggo test fmt
+.PHONY: local swaggo test fmt gen
 
 # ==============================================================================
 # Go migrate mysql
@@ -43,6 +43,9 @@ run:
 
 build:
 	go build ./cmd/api/main.go
+
+gen:
+	go generate ./...
 
 test:
 	go test -cover ./...

@@ -1,3 +1,4 @@
+//go:generate moq -out ./moq/${GOFILE} -pkg mock . UseCase
 package session
 
 import (
@@ -9,9 +10,9 @@ import (
 // UseCase defines the interface for session management use cases.
 type UseCase interface {
 	// CreateSession creates a new session with the provided data and expiration time.
-	CreateSession(ctx context.Context, sess *models.Session, expires int) (string, error)
+	Create(ctx context.Context, sess *models.Session, expires int) (string, error)
 	// DeleteByID deletes a session by its ID.
 	DeleteByID(ctx context.Context, id string) error
-	// GetSessionByID retrieves a session by its ID.
-	GetSessionByID(ctx context.Context, id string) (*models.Session, error)
+	// GetByID retrieves a session by its ID.
+	GetByID(ctx context.Context, id string) (*models.Session, error)
 }

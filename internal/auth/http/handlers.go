@@ -65,7 +65,7 @@ func (h *authHandlers) Register() gin.HandlerFunc {
 			return
 		}
 
-		sess, err := h.sessUC.CreateSession(ctx,
+		sess, err := h.sessUC.Create(ctx,
 			&models.Session{UserID: createdUser.User.UserID},
 			h.cfg.Session.Expire)
 		if err != nil {
@@ -112,7 +112,7 @@ func (h *authHandlers) Login() gin.HandlerFunc {
 			return
 		}
 
-		sess, err := h.sessUC.CreateSession(ctx,
+		sess, err := h.sessUC.Create(ctx,
 			&models.Session{UserID: userWithToken.User.UserID},
 			h.cfg.Session.Expire)
 		if err != nil {

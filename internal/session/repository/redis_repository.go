@@ -27,24 +27,24 @@ func NewSessionRepo(redisClient *redis.Client, cfg *config.Config) session.Repos
 }
 
 // CreateSession creates a new session
-func (s *sessionRepo) CreateSession(ctx context.Context, sess *models.Session, expiration int) (string, error) {
+func (s *sessionRepo) Create(ctx context.Context, sess *models.Session, expiration int) (string, error) {
 	sess.SessionID = utils.NewUUIDStr()
 	sessionKey := s.createKey(sess.SessionID)
 
 	sessBytes, err := json.Marshal(&sess)
 	if err != nil {
-		return "", errors.Wrap(err, "sessionRepo.CreateSession.json.Marshal")
+		return "", errors.Wrap(err, "sessionRepo.Create.json.Marshal")
 	}
 
 	if err := s.redisClient.Set(ctx, sessionKey, sessBytes, time.Second*time.Duration(expiration)).Err(); err != nil {
-		return "", errors.Wrap(err, "sessionRepo.CreateSession.redisClient.Set")
+		return "", errors.Wrap(err, "sessionRepo.Create.redisClient.Set")
 	}
 
 	return sessionKey, nil
 }
 
 // GetSessionById returns a session
-func (s *sessionRepo) GetSessionByID(ctx context.Context, id string) (*models.Session, error) {
+func (s *sessionRepo) GetByID(ctx context.Context, id string) (*models.Session, error) {
 	sessBytes, err := s.redisClient.Get(ctx, id).Bytes()
 	if err != nil {
 		return nil, errors.Wrap(err, "sessionRepo.GetSessionByID.redisClient.Get")

@@ -33,7 +33,7 @@ func (mw *Wrapper) AuthSessionMiddleware() gin.HandlerFunc {
 		ctx := c.Request.Context()
 
 		// セッション取得に失敗した場合は、unauthorized
-		sess, err := mw.sessUC.GetSessionByID(ctx, sid)
+		sess, err := mw.sessUC.GetByID(ctx, sid)
 		if err != nil {
 			mw.lg.Error("AuthSessionMiddleware.sessUC.GetSessionByID", logger.Error(err), logger.String("cookie", sid))
 			c.JSON(http.StatusUnauthorized, httperrors.Unauthorized(httperrors.ErrUnauthorized))
