@@ -17,9 +17,9 @@ import (
 // authHandlers auth handlers
 type authHandlers struct {
 	cfg    *config.Config
+	lg     logger.Logger
 	uc     auth.UseCase
 	sessUC session.UseCase
-	lg     logger.Logger
 }
 
 // NewAuthHandlers is a constructor of authHandlers

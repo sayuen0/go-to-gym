@@ -101,3 +101,8 @@ func Int(key string, val int) zap.Field {
 func ByteString(key string, val []byte) zap.Field {
 	return zap.ByteString(key, val)
 }
+
+// Struct return zap.Field
+func Struct(key string, val interface{}) zap.Field {
+	return zap.Any(key, val)
+}

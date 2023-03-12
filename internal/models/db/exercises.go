@@ -86,135 +86,6 @@ var ExerciseTableColumns = struct {
 
 // Generated where
 
-type whereHelperint struct{ field string }
-
-func (w whereHelperint) EQ(x int) qm.QueryMod  { return qmhelper.Where(w.field, qmhelper.EQ, x) }
-func (w whereHelperint) NEQ(x int) qm.QueryMod { return qmhelper.Where(w.field, qmhelper.NEQ, x) }
-func (w whereHelperint) LT(x int) qm.QueryMod  { return qmhelper.Where(w.field, qmhelper.LT, x) }
-func (w whereHelperint) LTE(x int) qm.QueryMod { return qmhelper.Where(w.field, qmhelper.LTE, x) }
-func (w whereHelperint) GT(x int) qm.QueryMod  { return qmhelper.Where(w.field, qmhelper.GT, x) }
-func (w whereHelperint) GTE(x int) qm.QueryMod { return qmhelper.Where(w.field, qmhelper.GTE, x) }
-func (w whereHelperint) IN(slice []int) qm.QueryMod {
-	values := make([]interface{}, 0, len(slice))
-	for _, value := range slice {
-		values = append(values, value)
-	}
-	return qm.WhereIn(fmt.Sprintf("%s IN ?", w.field), values...)
-}
-func (w whereHelperint) NIN(slice []int) qm.QueryMod {
-	values := make([]interface{}, 0, len(slice))
-	for _, value := range slice {
-		values = append(values, value)
-	}
-	return qm.WhereNotIn(fmt.Sprintf("%s NOT IN ?", w.field), values...)
-}
-
-type whereHelperstring struct{ field string }
-
-func (w whereHelperstring) EQ(x string) qm.QueryMod  { return qmhelper.Where(w.field, qmhelper.EQ, x) }
-func (w whereHelperstring) NEQ(x string) qm.QueryMod { return qmhelper.Where(w.field, qmhelper.NEQ, x) }
-func (w whereHelperstring) LT(x string) qm.QueryMod  { return qmhelper.Where(w.field, qmhelper.LT, x) }
-func (w whereHelperstring) LTE(x string) qm.QueryMod { return qmhelper.Where(w.field, qmhelper.LTE, x) }
-func (w whereHelperstring) GT(x string) qm.QueryMod  { return qmhelper.Where(w.field, qmhelper.GT, x) }
-func (w whereHelperstring) GTE(x string) qm.QueryMod { return qmhelper.Where(w.field, qmhelper.GTE, x) }
-func (w whereHelperstring) IN(slice []string) qm.QueryMod {
-	values := make([]interface{}, 0, len(slice))
-	for _, value := range slice {
-		values = append(values, value)
-	}
-	return qm.WhereIn(fmt.Sprintf("%s IN ?", w.field), values...)
-}
-func (w whereHelperstring) NIN(slice []string) qm.QueryMod {
-	values := make([]interface{}, 0, len(slice))
-	for _, value := range slice {
-		values = append(values, value)
-	}
-	return qm.WhereNotIn(fmt.Sprintf("%s NOT IN ?", w.field), values...)
-}
-
-type whereHelpernull_String struct{ field string }
-
-func (w whereHelpernull_String) EQ(x null.String) qm.QueryMod {
-	return qmhelper.WhereNullEQ(w.field, false, x)
-}
-func (w whereHelpernull_String) NEQ(x null.String) qm.QueryMod {
-	return qmhelper.WhereNullEQ(w.field, true, x)
-}
-func (w whereHelpernull_String) LT(x null.String) qm.QueryMod {
-	return qmhelper.Where(w.field, qmhelper.LT, x)
-}
-func (w whereHelpernull_String) LTE(x null.String) qm.QueryMod {
-	return qmhelper.Where(w.field, qmhelper.LTE, x)
-}
-func (w whereHelpernull_String) GT(x null.String) qm.QueryMod {
-	return qmhelper.Where(w.field, qmhelper.GT, x)
-}
-func (w whereHelpernull_String) GTE(x null.String) qm.QueryMod {
-	return qmhelper.Where(w.field, qmhelper.GTE, x)
-}
-func (w whereHelpernull_String) IN(slice []string) qm.QueryMod {
-	values := make([]interface{}, 0, len(slice))
-	for _, value := range slice {
-		values = append(values, value)
-	}
-	return qm.WhereIn(fmt.Sprintf("%s IN ?", w.field), values...)
-}
-func (w whereHelpernull_String) NIN(slice []string) qm.QueryMod {
-	values := make([]interface{}, 0, len(slice))
-	for _, value := range slice {
-		values = append(values, value)
-	}
-	return qm.WhereNotIn(fmt.Sprintf("%s NOT IN ?", w.field), values...)
-}
-
-func (w whereHelpernull_String) IsNull() qm.QueryMod    { return qmhelper.WhereIsNull(w.field) }
-func (w whereHelpernull_String) IsNotNull() qm.QueryMod { return qmhelper.WhereIsNotNull(w.field) }
-
-type whereHelpertime_Time struct{ field string }
-
-func (w whereHelpertime_Time) EQ(x time.Time) qm.QueryMod {
-	return qmhelper.Where(w.field, qmhelper.EQ, x)
-}
-func (w whereHelpertime_Time) NEQ(x time.Time) qm.QueryMod {
-	return qmhelper.Where(w.field, qmhelper.NEQ, x)
-}
-func (w whereHelpertime_Time) LT(x time.Time) qm.QueryMod {
-	return qmhelper.Where(w.field, qmhelper.LT, x)
-}
-func (w whereHelpertime_Time) LTE(x time.Time) qm.QueryMod {
-	return qmhelper.Where(w.field, qmhelper.LTE, x)
-}
-func (w whereHelpertime_Time) GT(x time.Time) qm.QueryMod {
-	return qmhelper.Where(w.field, qmhelper.GT, x)
-}
-func (w whereHelpertime_Time) GTE(x time.Time) qm.QueryMod {
-	return qmhelper.Where(w.field, qmhelper.GTE, x)
-}
-
-type whereHelpernull_Time struct{ field string }
-
-func (w whereHelpernull_Time) EQ(x null.Time) qm.QueryMod {
-	return qmhelper.WhereNullEQ(w.field, false, x)
-}
-func (w whereHelpernull_Time) NEQ(x null.Time) qm.QueryMod {
-	return qmhelper.WhereNullEQ(w.field, true, x)
-}
-func (w whereHelpernull_Time) LT(x null.Time) qm.QueryMod {
-	return qmhelper.Where(w.field, qmhelper.LT, x)
-}
-func (w whereHelpernull_Time) LTE(x null.Time) qm.QueryMod {
-	return qmhelper.Where(w.field, qmhelper.LTE, x)
-}
-func (w whereHelpernull_Time) GT(x null.Time) qm.QueryMod {
-	return qmhelper.Where(w.field, qmhelper.GT, x)
-}
-func (w whereHelpernull_Time) GTE(x null.Time) qm.QueryMod {
-	return qmhelper.Where(w.field, qmhelper.GTE, x)
-}
-
-func (w whereHelpernull_Time) IsNull() qm.QueryMod    { return qmhelper.WhereIsNull(w.field) }
-func (w whereHelpernull_Time) IsNotNull() qm.QueryMod { return qmhelper.WhereIsNotNull(w.field) }
-
 var ExerciseWhere = struct {
 	ID           whereHelperint
 	ExerciseName whereHelperstring
@@ -249,7 +120,7 @@ var ExerciseRels = struct {
 // exerciseR is where relationships are stored.
 type exerciseR struct {
 	User         *User             `boil:"User" json:"User" toml:"User" yaml:"User"`
-	Category     *TrainingCategory `boil:"Category" json:"Category" toml:"Category" yaml:"Category"`
+	Category     *ExerciseCategory `boil:"Category" json:"Category" toml:"Category" yaml:"Category"`
 	TrainingSets TrainingSetSlice  `boil:"TrainingSets" json:"TrainingSets" toml:"TrainingSets" yaml:"TrainingSets"`
 }
 
@@ -265,7 +136,7 @@ func (r *exerciseR) GetUser() *User {
 	return r.User
 }
 
-func (r *exerciseR) GetCategory() *TrainingCategory {
+func (r *exerciseR) GetCategory() *ExerciseCategory {
 	if r == nil {
 		return nil
 	}
@@ -580,14 +451,14 @@ func (o *Exercise) User(mods ...qm.QueryMod) userQuery {
 }
 
 // Category pointed to by the foreign key.
-func (o *Exercise) Category(mods ...qm.QueryMod) trainingCategoryQuery {
+func (o *Exercise) Category(mods ...qm.QueryMod) exerciseCategoryQuery {
 	queryMods := []qm.QueryMod{
 		qm.Where("`id` = ?", o.CategoryID),
 	}
 
 	queryMods = append(queryMods, mods...)
 
-	return TrainingCategories(queryMods...)
+	return ExerciseCategories(queryMods...)
 }
 
 // TrainingSets retrieves all the training_set's TrainingSets with an executor.
@@ -782,8 +653,8 @@ func (exerciseL) LoadCategory(ctx context.Context, e boil.ContextExecutor, singu
 	}
 
 	query := NewQuery(
-		qm.From(`training_categories`),
-		qm.WhereIn(`training_categories.id in ?`, args...),
+		qm.From(`exercise_categories`),
+		qm.WhereIn(`exercise_categories.id in ?`, args...),
 	)
 	if mods != nil {
 		mods.Apply(query)
@@ -791,22 +662,22 @@ func (exerciseL) LoadCategory(ctx context.Context, e boil.ContextExecutor, singu
 
 	results, err := query.QueryContext(ctx, e)
 	if err != nil {
-		return errors.Wrap(err, "failed to eager load TrainingCategory")
+		return errors.Wrap(err, "failed to eager load ExerciseCategory")
 	}
 
-	var resultSlice []*TrainingCategory
+	var resultSlice []*ExerciseCategory
 	if err = queries.Bind(results, &resultSlice); err != nil {
-		return errors.Wrap(err, "failed to bind eager loaded slice TrainingCategory")
+		return errors.Wrap(err, "failed to bind eager loaded slice ExerciseCategory")
 	}
 
 	if err = results.Close(); err != nil {
-		return errors.Wrap(err, "failed to close results of eager load for training_categories")
+		return errors.Wrap(err, "failed to close results of eager load for exercise_categories")
 	}
 	if err = results.Err(); err != nil {
-		return errors.Wrap(err, "error occurred during iteration of eager loaded relations for training_categories")
+		return errors.Wrap(err, "error occurred during iteration of eager loaded relations for exercise_categories")
 	}
 
-	if len(trainingCategoryAfterSelectHooks) != 0 {
+	if len(exerciseCategoryAfterSelectHooks) != 0 {
 		for _, obj := range resultSlice {
 			if err := obj.doAfterSelectHooks(ctx, e); err != nil {
 				return err
@@ -822,7 +693,7 @@ func (exerciseL) LoadCategory(ctx context.Context, e boil.ContextExecutor, singu
 		foreign := resultSlice[0]
 		object.R.Category = foreign
 		if foreign.R == nil {
-			foreign.R = &trainingCategoryR{}
+			foreign.R = &exerciseCategoryR{}
 		}
 		foreign.R.CategoryExercises = append(foreign.R.CategoryExercises, object)
 		return nil
@@ -833,7 +704,7 @@ func (exerciseL) LoadCategory(ctx context.Context, e boil.ContextExecutor, singu
 			if local.CategoryID == foreign.ID {
 				local.R.Category = foreign
 				if foreign.R == nil {
-					foreign.R = &trainingCategoryR{}
+					foreign.R = &exerciseCategoryR{}
 				}
 				foreign.R.CategoryExercises = append(foreign.R.CategoryExercises, local)
 				break
@@ -1008,7 +879,7 @@ func (o *Exercise) SetUser(ctx context.Context, exec boil.ContextExecutor, inser
 // SetCategory of the exercise to the related item.
 // Sets o.R.Category to related.
 // Adds o to related.R.CategoryExercises.
-func (o *Exercise) SetCategory(ctx context.Context, exec boil.ContextExecutor, insert bool, related *TrainingCategory) error {
+func (o *Exercise) SetCategory(ctx context.Context, exec boil.ContextExecutor, insert bool, related *ExerciseCategory) error {
 	var err error
 	if insert {
 		if err = related.Insert(ctx, exec, boil.Infer()); err != nil {
@@ -1042,7 +913,7 @@ func (o *Exercise) SetCategory(ctx context.Context, exec boil.ContextExecutor, i
 	}
 
 	if related.R == nil {
-		related.R = &trainingCategoryR{
+		related.R = &exerciseCategoryR{
 			CategoryExercises: ExerciseSlice{o},
 		}
 	} else {
