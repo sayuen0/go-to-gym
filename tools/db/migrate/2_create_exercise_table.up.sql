@@ -2,7 +2,7 @@ CREATE TABLE exercise_categories
 (
     id          INT(11) PRIMARY KEY AUTO_INCREMENT COMMENT 'カテゴリーID',
     user_id     INT(11)     NOT NULL COMMENT 'ユーザーID',
-    name        VARCHAR(50) NOT NULL COMMENT 'カテゴリー名' CHECK (LENGTH(`name`) > 0),
+    name        VARCHAR(255) NOT NULL COMMENT 'カテゴリー名' CHECK (LENGTH(`name`) > 0),
     description TEXT        NULL COMMENT 'カテゴリーの説明',
     created_at  TIMESTAMP   NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'レコード作成日時',
     updated_at  TIMESTAMP   NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'レコード更新日時',
@@ -15,7 +15,7 @@ CREATE TABLE exercise_categories
 CREATE TABLE exercises
 (
     id            INT(11) PRIMARY KEY AUTO_INCREMENT COMMENT '種目ID',
-    exercise_name VARCHAR(50) NOT NULL COMMENT '種目名' CHECK (LENGTH(`exercise_name`) > 0),
+    name VARCHAR(255) NOT NULL COMMENT '種目名' CHECK (LENGTH(name) > 0),
     description   TEXT COMMENT '種目の説明',
     user_id       INT(11)     NOT NULL COMMENT 'ユーザーID',
     category_id   INT(11)     NOT NULL COMMENT 'カテゴリーID',

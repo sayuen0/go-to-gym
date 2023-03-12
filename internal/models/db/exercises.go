@@ -26,7 +26,7 @@ import (
 type Exercise struct { // 種目ID
 	ID int `boil:"id" json:"id" toml:"id" yaml:"id"`
 	// 種目名
-	ExerciseName string `boil:"exercise_name" json:"exercise_name" toml:"exercise_name" yaml:"exercise_name"`
+	Name string `boil:"name" json:"name" toml:"name" yaml:"name"`
 	// 種目の説明
 	Description null.String `boil:"description" json:"description,omitempty" toml:"description" yaml:"description,omitempty"`
 	// ユーザーID
@@ -45,65 +45,65 @@ type Exercise struct { // 種目ID
 }
 
 var ExerciseColumns = struct {
-	ID           string
-	ExerciseName string
-	Description  string
-	UserID       string
-	CategoryID   string
-	CreatedAt    string
-	UpdatedAt    string
-	DeletedAt    string
+	ID          string
+	Name        string
+	Description string
+	UserID      string
+	CategoryID  string
+	CreatedAt   string
+	UpdatedAt   string
+	DeletedAt   string
 }{
-	ID:           "id",
-	ExerciseName: "exercise_name",
-	Description:  "description",
-	UserID:       "user_id",
-	CategoryID:   "category_id",
-	CreatedAt:    "created_at",
-	UpdatedAt:    "updated_at",
-	DeletedAt:    "deleted_at",
+	ID:          "id",
+	Name:        "name",
+	Description: "description",
+	UserID:      "user_id",
+	CategoryID:  "category_id",
+	CreatedAt:   "created_at",
+	UpdatedAt:   "updated_at",
+	DeletedAt:   "deleted_at",
 }
 
 var ExerciseTableColumns = struct {
-	ID           string
-	ExerciseName string
-	Description  string
-	UserID       string
-	CategoryID   string
-	CreatedAt    string
-	UpdatedAt    string
-	DeletedAt    string
+	ID          string
+	Name        string
+	Description string
+	UserID      string
+	CategoryID  string
+	CreatedAt   string
+	UpdatedAt   string
+	DeletedAt   string
 }{
-	ID:           "exercises.id",
-	ExerciseName: "exercises.exercise_name",
-	Description:  "exercises.description",
-	UserID:       "exercises.user_id",
-	CategoryID:   "exercises.category_id",
-	CreatedAt:    "exercises.created_at",
-	UpdatedAt:    "exercises.updated_at",
-	DeletedAt:    "exercises.deleted_at",
+	ID:          "exercises.id",
+	Name:        "exercises.name",
+	Description: "exercises.description",
+	UserID:      "exercises.user_id",
+	CategoryID:  "exercises.category_id",
+	CreatedAt:   "exercises.created_at",
+	UpdatedAt:   "exercises.updated_at",
+	DeletedAt:   "exercises.deleted_at",
 }
 
 // Generated where
 
 var ExerciseWhere = struct {
-	ID           whereHelperint
-	ExerciseName whereHelperstring
-	Description  whereHelpernull_String
-	UserID       whereHelperint
-	CategoryID   whereHelperint
-	CreatedAt    whereHelpertime_Time
-	UpdatedAt    whereHelpertime_Time
-	DeletedAt    whereHelpernull_Time
+	ID          whereHelperint
+	Name        whereHelperstring
+	Description whereHelpernull_String
+	UserID      whereHelperint
+	CategoryID  whereHelperint
+	CreatedAt   whereHelpertime_Time
+	UpdatedAt   whereHelpertime_Time
+	DeletedAt   whereHelpernull_Time
 }{
-	ID:           whereHelperint{field: "`exercises`.`id`"},
-	ExerciseName: whereHelperstring{field: "`exercises`.`exercise_name`"},
-	Description:  whereHelpernull_String{field: "`exercises`.`description`"},
-	UserID:       whereHelperint{field: "`exercises`.`user_id`"},
-	CategoryID:   whereHelperint{field: "`exercises`.`category_id`"},
-	CreatedAt:    whereHelpertime_Time{field: "`exercises`.`created_at`"},
-	UpdatedAt:    whereHelpertime_Time{field: "`exercises`.`updated_at`"},
-	DeletedAt:    whereHelpernull_Time{field: "`exercises`.`deleted_at`"},
+	ID:          whereHelperint{field: "`exercises`.`id`"},
+	Name:        whereHelperstring{field: "`exercises`.`name`"},
+	Description: whereHelpernull_String{field: "`exercises`.`description`"},
+	UserID:      whereHelperint{field: "`exercises`.`user_id`"},
+	CategoryID:  whereHelperint{field: "`exercises`.`category_id`"},
+	CreatedAt:   whereHelpertime_Time{field: "`exercises`.`created_at`"},
+	UpdatedAt:   whereHelpertime_Time{field: "`exercises`.`updated_at`"},
+	DeletedAt:   whereHelpernull_Time{field: "`exercises`.`deleted_at`"},
 }
 
 // ExerciseRels is where relationship names are stored.
@@ -154,8 +154,8 @@ func (r *exerciseR) GetTrainingSets() TrainingSetSlice {
 type exerciseL struct{}
 
 var (
-	exerciseAllColumns            = []string{"id", "exercise_name", "description", "user_id", "category_id", "created_at", "updated_at", "deleted_at"}
-	exerciseColumnsWithoutDefault = []string{"exercise_name", "description", "user_id", "category_id", "deleted_at"}
+	exerciseAllColumns            = []string{"id", "name", "description", "user_id", "category_id", "created_at", "updated_at", "deleted_at"}
+	exerciseColumnsWithoutDefault = []string{"name", "description", "user_id", "category_id", "deleted_at"}
 	exerciseColumnsWithDefault    = []string{"id", "created_at", "updated_at"}
 	exercisePrimaryKeyColumns     = []string{"id"}
 	exerciseGeneratedColumns      = []string{}

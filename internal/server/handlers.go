@@ -1,12 +1,15 @@
 package server
 
 import (
+	excsHttp "github.com/sayuen0/go-to-gym/internal/domain/exercise/http"
+	"github.com/sayuen0/go-to-gym/internal/domain/exercise/repository"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 	authHttp "github.com/sayuen0/go-to-gym/internal/auth/http"
 	authRepo "github.com/sayuen0/go-to-gym/internal/auth/repository"
 	authUseCase "github.com/sayuen0/go-to-gym/internal/auth/usecase"
+	excsUseCase "github.com/sayuen0/go-to-gym/internal/domain/exercise/usecase"
 	exCtHttp "github.com/sayuen0/go-to-gym/internal/domain/exercise_category/http"
 	exCtRepo "github.com/sayuen0/go-to-gym/internal/domain/exercise_category/repository"
 	exCtUseCase "github.com/sayuen0/go-to-gym/internal/domain/exercise_category/usecase"
@@ -23,12 +26,14 @@ func (s *server) Handle(r *gin.Engine) error {
 	sessRp := sessRepo.NewSessionRepo(s.redisClient, s.cfg)
 
 	exCtRp := exCtRepo.NewExerciseCategoryRepo(s.cfg, s.db)
+	excsRp := repository.NewExerciseRepo(s.cfg, s.db)
 
 	// -----------------------------------------------------------------------------------------------------------------
 	// use-cases
 	authUC := authUseCase.NewAuthUseCase(s.cfg, s.lg, authRp, authRedisRp)
 	sessUC := sessUseCase.NewSessionUseCase(s.cfg, sessRp)
 	exCtUC := exCtUseCase.NewExerciseCategoryUseCase(s.cfg, s.lg, exCtRp, authRp)
+	excsUC := excsUseCase.NewExerciseUseCase(s.cfg, s.lg, excsRp, authRp, exCtRp)
 
 	// -----------------------------------------------------------------------------------------------------------------
 	// middlewares
@@ -55,6 +60,11 @@ func (s *server) Handle(r *gin.Engine) error {
 	exCtHandlers := exCtHttp.NewExerciseCategoryHandlers(s.cfg, s.lg, exCtUC)
 	exCtGroup := r.Group("/exercise_categories", mw.AuthSessionMiddleware())
 	exCtHttp.MapExerciseCategoryRoutes(exCtGroup, exCtHandlers, mw)
+
+	// exercise
+	excsHandlers := excsHttp.NewExerciseHandlers(s.cfg, s.lg, excsUC)
+	excsGroup := r.Group("/exercises", mw.AuthSessionMiddleware())
+	excsHttp.MapExerciseRoutes(excsGroup, excsHandlers, mw)
 
 	// health check
 	health := r.Group("/health")

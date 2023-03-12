@@ -45,9 +45,8 @@ func (rp *repository) Create(ctx context.Context, req *models.ExerciseCategoryCr
 	return c, nil
 }
 
-func (rp *repository) Get(ctx context.Context, id int64) (*db.ExerciseCategory, error) {
-	//TODO implement me
-	panic("implement me")
+func (rp *repository) Get(ctx context.Context, id int) (*db.ExerciseCategory, error) {
+	return db.ExerciseCategories(qm.Where("id = ?", id)).One(ctx, rp.db)
 }
 
 // GetByUserAndName return true if an exercise category exists with user-id and name
