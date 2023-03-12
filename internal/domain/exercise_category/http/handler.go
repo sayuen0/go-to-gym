@@ -47,6 +47,14 @@ func (h *exerciseCategoryHandlers) Create() gin.HandlerFunc {
 			return
 		}
 
+		user, err := utils.GetLoginUser(c)
+		if err != nil {
+			utils.LogResponseError(c, h.lg, err)
+			c.JSON(httperrors.ErrorResponse(err))
+			return
+		}
+		cat.UserUUID = user.UserID
+
 		createdCategory, err := h.uc.Create(ctx, cat)
 		if err != nil {
 			utils.LogResponseError(c, h.lg, err)
@@ -55,5 +63,35 @@ func (h *exerciseCategoryHandlers) Create() gin.HandlerFunc {
 		}
 
 		c.JSON(http.StatusCreated, createdCategory)
+	}
+}
+
+// List godoc
+// @Summary List exercise categories
+// @Description list exercise categories, return exercise category
+// @Tags ExerciseCategory
+// @Produces json
+// @Accept json
+// @Success 200 {object} models.ExerciseCategoryList
+// @Router /auth/register [post]
+func (h *exerciseCategoryHandlers) List() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		ctx := c.Request.Context()
+
+		user, err := utils.GetLoginUser(c)
+		if err != nil {
+			utils.LogResponseError(c, h.lg, err)
+			c.JSON(httperrors.ErrorResponse(err))
+			return
+		}
+
+		categories, err := h.uc.List(ctx, user.UserID)
+		if err != nil {
+			utils.LogResponseError(c, h.lg, err)
+			c.JSON(httperrors.ErrorResponse(err))
+			return
+		}
+
+		c.JSON(http.StatusOK, categories)
 	}
 }

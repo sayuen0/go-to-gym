@@ -27,6 +27,7 @@ func (mw *Wrapper) AuthSessionMiddleware() gin.HandlerFunc {
 			}
 
 			c.JSON(http.StatusUnauthorized, httperrors.Unauthorized(httperrors.ErrUnauthorized))
+			return
 		}
 
 		sid := cookie
@@ -37,12 +38,14 @@ func (mw *Wrapper) AuthSessionMiddleware() gin.HandlerFunc {
 		if err != nil {
 			mw.lg.Error("AuthSessionMiddleware.sessUC.GetSessionByID", logger.Error(err), logger.String("cookie", sid))
 			c.JSON(http.StatusUnauthorized, httperrors.Unauthorized(httperrors.ErrUnauthorized))
+			return
 		}
 
 		user, err := mw.authUC.GetByID(ctx, sess.UserID)
 		if err != nil {
 			mw.lg.Error("AuthSessionMiddleware.authUC.GetByUUID", logger.Error(err), logger.String("cookie", sid))
 			c.JSON(http.StatusUnauthorized, httperrors.Unauthorized(httperrors.ErrUnauthorized))
+			return
 		}
 
 		c.Set("sid", sid)

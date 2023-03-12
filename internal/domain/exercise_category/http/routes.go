@@ -8,5 +8,6 @@ import (
 
 func MapExerciseCategoryRoutes(
 	rg *gin.RouterGroup, h exercise_category.Handlers, mw *middleware.Wrapper) {
+	rg.GET("/", h.List())
 	rg.POST("/", h.Create())
 }

@@ -54,3 +54,8 @@ func (rp *repository) Get(ctx context.Context, id int64) (*db.ExerciseCategory, 
 func (rp *repository) GetByUserAndName(ctx context.Context, userID int, name string) (*db.ExerciseCategory, error) {
 	return db.ExerciseCategories(qm.Where("user_id = ? AND name = ?", userID, name)).One(ctx, rp.db)
 }
+
+// GetByUserID returns exercise categories by user-id
+func (rp *repository) GetByUserID(ctx context.Context, userID int) ([]*db.ExerciseCategory, error) {
+	return db.ExerciseCategories(qm.Where("user_id = ?", userID)).All(ctx, rp.db)
+}

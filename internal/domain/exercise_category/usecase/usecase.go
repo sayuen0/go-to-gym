@@ -39,7 +39,7 @@ func (uc *categoryUC) Create(ctx context.Context, req *models.ExerciseCategoryCr
 		return nil, httperrors.BadRequest(err)
 	}
 
-	user, err := uc.authRepo.GetByUUID(ctx, req.UUID)
+	user, err := uc.authRepo.GetByUUID(ctx, req.UserUUID)
 	if err != nil {
 		uc.lg.Error("get user by id", logger.Error(err), logger.Struct("req", req))
 		return nil, httperrors.InternalServerError(err)
@@ -57,7 +57,7 @@ func (uc *categoryUC) Create(ctx context.Context, req *models.ExerciseCategoryCr
 // PrepareForCreate returns error if request is executable
 func (uc *categoryUC) PrepareForCreate(ctx context.Context, req *models.ExerciseCategoryCreateRequest) error {
 	// ユーザの存在チェック
-	user, err := uc.authRepo.GetByUUID(ctx, req.UUID)
+	user, err := uc.authRepo.GetByUUID(ctx, req.UserUUID)
 	if err != nil {
 		return errors.Wrap(err, "user not found")
 	}
@@ -73,4 +73,24 @@ func (uc *categoryUC) PrepareForCreate(ctx context.Context, req *models.Exercise
 	}
 
 	return nil
+}
+
+func (uc *categoryUC) List(ctx context.Context, userID string) (*models.ExerciseCategoryList, error) {
+	// ユーザの存在チェック
+	user, err := uc.authRepo.GetByUUID(ctx, userID)
+	if err != nil {
+		msg := "user not found"
+		uc.lg.Error("", logger.Error(err), logger.String("user_id", userID))
+		return nil, errors.Wrap(err, msg)
+	}
+
+	// ユーザ配下のカテゴリ取得
+	categories, err := uc.repo.GetByUserID(ctx, user.ID)
+	if err != nil {
+		msg := "get exercise categories by user id"
+		uc.lg.Error(msg, logger.Error(err), logger.String("uuid", userID))
+		return nil, errors.Wrap(err, msg)
+	}
+
+	return models.NEwExerciseCategoryList(categories), nil
 }

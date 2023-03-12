@@ -7,4 +7,5 @@ import (
 
 type UseCase interface {
 	Create(ctx context.Context, req *models.ExerciseCategoryCreateRequest) (*models.ExerciseCategory, error)
+	List(ctx context.Context, userID string) (*models.ExerciseCategoryList, error)
 }

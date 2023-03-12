@@ -2,6 +2,7 @@ package utils
 
 import (
 	"context"
+	"github.com/sayuen0/go-to-gym/internal/models"
 
 	"github.com/gin-gonic/gin"
 	"github.com/sayuen0/go-to-gym/config"
@@ -12,6 +13,20 @@ import (
 // GetIPAddress returns requesters' remote IP address
 func GetIPAddress(c *gin.Context) string {
 	return c.RemoteIP()
+}
+
+// GetLoginUser returns a user logged in
+func GetLoginUser(c *gin.Context) (*models.User, error) {
+	user, ok := c.Get("user")
+	if !ok {
+		return nil, httperrors.ErrUnauthorized
+	}
+	u, ok := user.(*models.User)
+	if !ok {
+		return nil, httperrors.ErrInternalServerError
+	}
+
+	return u, nil
 }
 
 // ErrorResponseWithLog returns response with logging error information

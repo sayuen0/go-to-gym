@@ -53,7 +53,7 @@ func (s *server) Handle(r *gin.Engine) error {
 
 	// exercise-category
 	exCtHandlers := exCtHttp.NewExerciseCategoryHandlers(s.cfg, s.lg, exCtUC)
-	exCtGroup := r.Group("/exercise_categories")
+	exCtGroup := r.Group("/exercise_categories", mw.AuthSessionMiddleware())
 	exCtHttp.MapExerciseCategoryRoutes(exCtGroup, exCtHandlers, mw)
 
 	// health check
