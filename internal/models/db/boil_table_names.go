@@ -4,7 +4,17 @@
 package db
 
 var TableNames = struct {
-	Users string
+	Exercises          string
+	TrainingCategories string
+	TrainingRecords    string
+	TrainingSetDetails string
+	TrainingSets       string
+	Users              string
 }{
-	Users: "users",
+	Exercises:          "exercises",
+	TrainingCategories: "training_categories",
+	TrainingRecords:    "training_records",
+	TrainingSetDetails: "training_set_details",
+	TrainingSets:       "training_sets",
+	Users:              "users",
 }
