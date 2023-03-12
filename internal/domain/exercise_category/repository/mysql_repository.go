@@ -10,6 +10,7 @@ import (
 	"github.com/sayuen0/go-to-gym/internal/models/db"
 	"github.com/volatiletech/null/v8"
 	"github.com/volatiletech/sqlboiler/v4/boil"
+	"github.com/volatiletech/sqlboiler/v4/queries/qm"
 )
 
 type repository struct {
@@ -24,10 +25,12 @@ func NewExerciseCategoryRepo(
 	return &repository{cfg: cfg, db: db}
 }
 
-func (rp *repository) Create(ctx context.Context, req *models.ExerciseCategoryCreateRequest) (*db.ExerciseCategory, error) {
+func (rp *repository) Create(ctx context.Context, req *models.ExerciseCategoryCreateRequest, userID int,
+) (*db.ExerciseCategory, error) {
 
 	c := &db.ExerciseCategory{
-		Name: req.Name,
+		UserID: userID,
+		Name:   req.Name,
 		Description: func(s string) null.String {
 			if s == "" {
 				return null.String{"", false}
@@ -42,7 +45,12 @@ func (rp *repository) Create(ctx context.Context, req *models.ExerciseCategoryCr
 	return c, nil
 }
 
-func (rp *repository) Get(ctx context.Context, id int64) (*models.ExerciseCategory, error) {
+func (rp *repository) Get(ctx context.Context, id int64) (*db.ExerciseCategory, error) {
 	//TODO implement me
 	panic("implement me")
+}
+
+// GetByUserAndName return true if an exercise category exists with user-id and name
+func (rp *repository) GetByUserAndName(ctx context.Context, userID int, name string) (*db.ExerciseCategory, error) {
+	return db.ExerciseCategories(qm.Where("user_id = ? AND name = ?", userID, name)).One(ctx, rp.db)
 }

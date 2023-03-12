@@ -27,7 +27,7 @@ var _ session.Repository = &RepositoryMock{}
 //				panic("mock out the DeleteByID method")
 //			},
 //			GetByIDFunc: func(ctx context.Context, id string) (*models.Session, error) {
-//				panic("mock out the GetByID method")
+//				panic("mock out the GetByUUID method")
 //			},
 //		}
 //
@@ -60,7 +60,7 @@ type RepositoryMock struct {
 		DeleteByID []struct {
 			// Ctx is the ctx argument value.
 			Ctx context.Context
-			// UserID is the userID argument value.
+			// UUID is the userID argument value.
 			UserID string
 		}
 		// GetByID holds details about calls to the GetByID method.
@@ -155,7 +155,7 @@ func (mock *RepositoryMock) DeleteByIDCalls() []struct {
 // GetByID calls GetByIDFunc.
 func (mock *RepositoryMock) GetByID(ctx context.Context, id string) (*models.Session, error) {
 	if mock.GetByIDFunc == nil {
-		panic("RepositoryMock.GetByIDFunc: method is nil but Repository.GetByID was just called")
+		panic("RepositoryMock.GetByIDFunc: method is nil but Repository.GetByUUID was just called")
 	}
 	callInfo := struct {
 		Ctx context.Context

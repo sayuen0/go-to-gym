@@ -70,6 +70,11 @@ func (r *authRepo) GetCount(ctx context.Context) (int64, error) {
 }
 
 // GetByID returns a user by userID
-func (r *authRepo) GetByID(ctx context.Context, userID string) (*db.User, error) {
+func (r *authRepo) GetByUUID(ctx context.Context, userID string) (*db.User, error) {
 	return db.Users(qm.Where("user_id = ?", userID)).One(ctx, r.db)
+}
+
+// Exists returns true if the user exists
+func (r *authRepo) Exists(ctx context.Context, userID string) (bool, error) {
+	return db.Users(qm.Where("user_id = ?", userID)).Exists(ctx, r.db)
 }

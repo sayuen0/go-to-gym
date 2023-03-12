@@ -150,22 +150,32 @@ var UserWhere = struct {
 
 // UserRels is where relationship names are stored.
 var UserRels = struct {
-	Exercises       string
-	TrainingRecords string
+	ExerciseCategories string
+	Exercises          string
+	TrainingRecords    string
 }{
-	Exercises:       "Exercises",
-	TrainingRecords: "TrainingRecords",
+	ExerciseCategories: "ExerciseCategories",
+	Exercises:          "Exercises",
+	TrainingRecords:    "TrainingRecords",
 }
 
 // userR is where relationships are stored.
 type userR struct {
-	Exercises       ExerciseSlice       `boil:"Exercises" json:"Exercises" toml:"Exercises" yaml:"Exercises"`
-	TrainingRecords TrainingRecordSlice `boil:"TrainingRecords" json:"TrainingRecords" toml:"TrainingRecords" yaml:"TrainingRecords"`
+	ExerciseCategories ExerciseCategorySlice `boil:"ExerciseCategories" json:"ExerciseCategories" toml:"ExerciseCategories" yaml:"ExerciseCategories"`
+	Exercises          ExerciseSlice         `boil:"Exercises" json:"Exercises" toml:"Exercises" yaml:"Exercises"`
+	TrainingRecords    TrainingRecordSlice   `boil:"TrainingRecords" json:"TrainingRecords" toml:"TrainingRecords" yaml:"TrainingRecords"`
 }
 
 // NewStruct creates a new relationship struct
 func (*userR) NewStruct() *userR {
 	return &userR{}
+}
+
+func (r *userR) GetExerciseCategories() ExerciseCategorySlice {
+	if r == nil {
+		return nil
+	}
+	return r.ExerciseCategories
 }
 
 func (r *userR) GetExercises() ExerciseSlice {
@@ -471,6 +481,20 @@ func (q userQuery) Exists(ctx context.Context, exec boil.ContextExecutor) (bool,
 	return count > 0, nil
 }
 
+// ExerciseCategories retrieves all the exercise_category's ExerciseCategories with an executor.
+func (o *User) ExerciseCategories(mods ...qm.QueryMod) exerciseCategoryQuery {
+	var queryMods []qm.QueryMod
+	if len(mods) != 0 {
+		queryMods = append(queryMods, mods...)
+	}
+
+	queryMods = append(queryMods,
+		qm.Where("`exercise_categories`.`user_id`=?", o.ID),
+	)
+
+	return ExerciseCategories(queryMods...)
+}
+
 // Exercises retrieves all the exercise's Exercises with an executor.
 func (o *User) Exercises(mods ...qm.QueryMod) exerciseQuery {
 	var queryMods []qm.QueryMod
@@ -497,6 +521,120 @@ func (o *User) TrainingRecords(mods ...qm.QueryMod) trainingRecordQuery {
 	)
 
 	return TrainingRecords(queryMods...)
+}
+
+// LoadExerciseCategories allows an eager lookup of values, cached into the
+// loaded structs of the objects. This is for a 1-M or N-M relationship.
+func (userL) LoadExerciseCategories(ctx context.Context, e boil.ContextExecutor, singular bool, maybeUser interface{}, mods queries.Applicator) error {
+	var slice []*User
+	var object *User
+
+	if singular {
+		var ok bool
+		object, ok = maybeUser.(*User)
+		if !ok {
+			object = new(User)
+			ok = queries.SetFromEmbeddedStruct(&object, &maybeUser)
+			if !ok {
+				return errors.New(fmt.Sprintf("failed to set %T from embedded struct %T", object, maybeUser))
+			}
+		}
+	} else {
+		s, ok := maybeUser.(*[]*User)
+		if ok {
+			slice = *s
+		} else {
+			ok = queries.SetFromEmbeddedStruct(&slice, maybeUser)
+			if !ok {
+				return errors.New(fmt.Sprintf("failed to set %T from embedded struct %T", slice, maybeUser))
+			}
+		}
+	}
+
+	args := make([]interface{}, 0, 1)
+	if singular {
+		if object.R == nil {
+			object.R = &userR{}
+		}
+		args = append(args, object.ID)
+	} else {
+	Outer:
+		for _, obj := range slice {
+			if obj.R == nil {
+				obj.R = &userR{}
+			}
+
+			for _, a := range args {
+				if a == obj.ID {
+					continue Outer
+				}
+			}
+
+			args = append(args, obj.ID)
+		}
+	}
+
+	if len(args) == 0 {
+		return nil
+	}
+
+	query := NewQuery(
+		qm.From(`exercise_categories`),
+		qm.WhereIn(`exercise_categories.user_id in ?`, args...),
+	)
+	if mods != nil {
+		mods.Apply(query)
+	}
+
+	results, err := query.QueryContext(ctx, e)
+	if err != nil {
+		return errors.Wrap(err, "failed to eager load exercise_categories")
+	}
+
+	var resultSlice []*ExerciseCategory
+	if err = queries.Bind(results, &resultSlice); err != nil {
+		return errors.Wrap(err, "failed to bind eager loaded slice exercise_categories")
+	}
+
+	if err = results.Close(); err != nil {
+		return errors.Wrap(err, "failed to close results in eager load on exercise_categories")
+	}
+	if err = results.Err(); err != nil {
+		return errors.Wrap(err, "error occurred during iteration of eager loaded relations for exercise_categories")
+	}
+
+	if len(exerciseCategoryAfterSelectHooks) != 0 {
+		for _, obj := range resultSlice {
+			if err := obj.doAfterSelectHooks(ctx, e); err != nil {
+				return err
+			}
+		}
+	}
+	if singular {
+		object.R.ExerciseCategories = resultSlice
+		for _, foreign := range resultSlice {
+			if foreign.R == nil {
+				foreign.R = &exerciseCategoryR{}
+			}
+			foreign.R.User = object
+		}
+		return nil
+	}
+
+	for _, foreign := range resultSlice {
+		for _, local := range slice {
+			if local.ID == foreign.UserID {
+				local.R.ExerciseCategories = append(local.R.ExerciseCategories, foreign)
+				if foreign.R == nil {
+					foreign.R = &exerciseCategoryR{}
+				}
+				foreign.R.User = local
+				break
+			}
+		}
+	}
+
+	return nil
 }
 
 // LoadExercises allows an eager lookup of values, cached into the
@@ -724,6 +862,59 @@ func (userL) LoadTrainingRecords(ctx context.Context, e boil.ContextExecutor, si
 		}
 	}
 
+	return nil
+}
+
+// AddExerciseCategories adds the given related objects to the existing relationships
+// of the user, optionally inserting them as new records.
+// Appends related to o.R.ExerciseCategories.
+// Sets related.R.User appropriately.
+func (o *User) AddExerciseCategories(ctx context.Context, exec boil.ContextExecutor, insert bool, related ...*ExerciseCategory) error {
+	var err error
+	for _, rel := range related {
+		if insert {
+			rel.UserID = o.ID
+			if err = rel.Insert(ctx, exec, boil.Infer()); err != nil {
+				return errors.Wrap(err, "failed to insert into foreign table")
+			}
+		} else {
+			updateQuery := fmt.Sprintf(
+				"UPDATE `exercise_categories` SET %s WHERE %s",
+				strmangle.SetParamNames("`", "`", 0, []string{"user_id"}),
+				strmangle.WhereClause("`", "`", 0, exerciseCategoryPrimaryKeyColumns),
+			)
+			values := []interface{}{o.ID, rel.ID}
+
+			if boil.IsDebug(ctx) {
+				writer := boil.DebugWriterFrom(ctx)
+				fmt.Fprintln(writer, updateQuery)
+				fmt.Fprintln(writer, values)
+			}
+			if _, err = exec.ExecContext(ctx, updateQuery, values...); err != nil {
+				return errors.Wrap(err, "failed to update foreign table")
+			}
+
+			rel.UserID = o.ID
+		}
+	}
+
+	if o.R == nil {
+		o.R = &userR{
+			ExerciseCategories: related,
+		}
+	} else {
+		o.R.ExerciseCategories = append(o.R.ExerciseCategories, related...)
+	}
+
+	for _, rel := range related {
+		if rel.R == nil {
+			rel.R = &exerciseCategoryR{
+				User: o,
+			}
+		} else {
+			rel.R.User = o
+		}
+	}
 	return nil
 }
 

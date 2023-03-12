@@ -3,6 +3,7 @@ package models
 import "github.com/sayuen0/go-to-gym/internal/models/db"
 
 type ExerciseCategoryCreateRequest struct {
+	UUID        string `json:"user_id" validate:"required"`
 	Name        string `json:"name" validate:"required"`
 	Description string `json:"description" validate:"omitempty"`
 }

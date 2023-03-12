@@ -1,11 +1,13 @@
 CREATE TABLE exercise_categories
 (
     id          INT(11) PRIMARY KEY AUTO_INCREMENT COMMENT 'カテゴリーID',
+    user_id     INT(11)     NOT NULL COMMENT 'ユーザーID',
     name        VARCHAR(50) NOT NULL COMMENT 'カテゴリー名' CHECK (LENGTH(`name`) > 0),
     description TEXT        NULL COMMENT 'カテゴリーの説明',
     created_at  TIMESTAMP   NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'レコード作成日時',
     updated_at  TIMESTAMP   NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'レコード更新日時',
-    deleted_at  TIMESTAMP   NULL     DEFAULT NULL COMMENT 'レコード削除日時'
+    deleted_at  TIMESTAMP   NULL     DEFAULT NULL COMMENT 'レコード削除日時',
+    FOREIGN KEY (user_id) REFERENCES users (id)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
   COLLATE = utf8mb4_unicode_ci COMMENT ='種目カテゴリマスタ';

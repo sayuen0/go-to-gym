@@ -28,7 +28,7 @@ func (s *server) Handle(r *gin.Engine) error {
 	// use-cases
 	authUC := authUseCase.NewAuthUseCase(s.cfg, s.lg, authRp, authRedisRp)
 	sessUC := sessUseCase.NewSessionUseCase(s.cfg, sessRp)
-	exCtUC := exCtUseCase.NewExerciseCategoryUseCase(s.cfg, s.lg, exCtRp)
+	exCtUC := exCtUseCase.NewExerciseCategoryUseCase(s.cfg, s.lg, exCtRp, authRp)
 
 	// -----------------------------------------------------------------------------------------------------------------
 	// middlewares

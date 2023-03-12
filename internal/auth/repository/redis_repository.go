@@ -32,12 +32,12 @@ func (r *authRedisRepo) GetByID(ctx context.Context, userID string) (*models.Use
 	// TODO: Redis専用モデルを作成すべき
 	userBytes, err := r.cli.Get(ctx, r.generateUserKey(userID)).Bytes()
 	if err != nil {
-		return nil, errors.Wrap(err, "authRedisRepo.GetByID.redis.Client.Get")
+		return nil, errors.Wrap(err, "authRedisRepo.GetByUUID.redis.Client.Get")
 	}
 
 	user := &models.User{}
 	if err := json.Unmarshal(userBytes, user); err != nil {
-		return nil, errors.Wrap(err, "authRedisRepo.GetByID.json.Unmarshal")
+		return nil, errors.Wrap(err, "authRedisRepo.GetByUUID.json.Unmarshal")
 	}
 
 	return user, nil

@@ -25,6 +25,8 @@ import (
 // ExerciseCategory is an object representing the database table.
 type ExerciseCategory struct { // カテゴリーID
 	ID int `boil:"id" json:"id" toml:"id" yaml:"id"`
+	// ユーザーID
+	UserID int `boil:"user_id" json:"user_id" toml:"user_id" yaml:"user_id"`
 	// カテゴリー名
 	Name string `boil:"name" json:"name" toml:"name" yaml:"name"`
 	// カテゴリーの説明
@@ -42,6 +44,7 @@ type ExerciseCategory struct { // カテゴリーID
 
 var ExerciseCategoryColumns = struct {
 	ID          string
+	UserID      string
 	Name        string
 	Description string
 	CreatedAt   string
@@ -49,6 +52,7 @@ var ExerciseCategoryColumns = struct {
 	DeletedAt   string
 }{
 	ID:          "id",
+	UserID:      "user_id",
 	Name:        "name",
 	Description: "description",
 	CreatedAt:   "created_at",
@@ -58,6 +62,7 @@ var ExerciseCategoryColumns = struct {
 
 var ExerciseCategoryTableColumns = struct {
 	ID          string
+	UserID      string
 	Name        string
 	Description string
 	CreatedAt   string
@@ -65,6 +70,7 @@ var ExerciseCategoryTableColumns = struct {
 	DeletedAt   string
 }{
 	ID:          "exercise_categories.id",
+	UserID:      "exercise_categories.user_id",
 	Name:        "exercise_categories.name",
 	Description: "exercise_categories.description",
 	CreatedAt:   "exercise_categories.created_at",
@@ -205,6 +211,7 @@ func (w whereHelpernull_Time) IsNotNull() qm.QueryMod { return qmhelper.WhereIsN
 
 var ExerciseCategoryWhere = struct {
 	ID          whereHelperint
+	UserID      whereHelperint
 	Name        whereHelperstring
 	Description whereHelpernull_String
 	CreatedAt   whereHelpertime_Time
@@ -212,6 +219,7 @@ var ExerciseCategoryWhere = struct {
 	DeletedAt   whereHelpernull_Time
 }{
 	ID:          whereHelperint{field: "`exercise_categories`.`id`"},
+	UserID:      whereHelperint{field: "`exercise_categories`.`user_id`"},
 	Name:        whereHelperstring{field: "`exercise_categories`.`name`"},
 	Description: whereHelpernull_String{field: "`exercise_categories`.`description`"},
 	CreatedAt:   whereHelpertime_Time{field: "`exercise_categories`.`created_at`"},
@@ -221,19 +229,29 @@ var ExerciseCategoryWhere = struct {
 
 // ExerciseCategoryRels is where relationship names are stored.
 var ExerciseCategoryRels = struct {
+	User              string
 	CategoryExercises string
 }{
+	User:              "User",
 	CategoryExercises: "CategoryExercises",
 }
 
 // exerciseCategoryR is where relationships are stored.
 type exerciseCategoryR struct {
+	User              *User         `boil:"User" json:"User" toml:"User" yaml:"User"`
 	CategoryExercises ExerciseSlice `boil:"CategoryExercises" json:"CategoryExercises" toml:"CategoryExercises" yaml:"CategoryExercises"`
 }
 
 // NewStruct creates a new relationship struct
 func (*exerciseCategoryR) NewStruct() *exerciseCategoryR {
 	return &exerciseCategoryR{}
+}
+
+func (r *exerciseCategoryR) GetUser() *User {
+	if r == nil {
+		return nil
+	}
+	return r.User
 }
 
 func (r *exerciseCategoryR) GetCategoryExercises() ExerciseSlice {
@@ -247,8 +265,8 @@ func (r *exerciseCategoryR) GetCategoryExercises() ExerciseSlice {
 type exerciseCategoryL struct{}
 
 var (
-	exerciseCategoryAllColumns            = []string{"id", "name", "description", "created_at", "updated_at", "deleted_at"}
-	exerciseCategoryColumnsWithoutDefault = []string{"name", "description", "deleted_at"}
+	exerciseCategoryAllColumns            = []string{"id", "user_id", "name", "description", "created_at", "updated_at", "deleted_at"}
+	exerciseCategoryColumnsWithoutDefault = []string{"user_id", "name", "description", "deleted_at"}
 	exerciseCategoryColumnsWithDefault    = []string{"id", "created_at", "updated_at"}
 	exerciseCategoryPrimaryKeyColumns     = []string{"id"}
 	exerciseCategoryGeneratedColumns      = []string{}
@@ -532,6 +550,17 @@ func (q exerciseCategoryQuery) Exists(ctx context.Context, exec boil.ContextExec
 	return count > 0, nil
 }
 
+// User pointed to by the foreign key.
+func (o *ExerciseCategory) User(mods ...qm.QueryMod) userQuery {
+	queryMods := []qm.QueryMod{
+		qm.Where("`id` = ?", o.UserID),
+	}
+
+	queryMods = append(queryMods, mods...)
+
+	return Users(queryMods...)
+}
+
 // CategoryExercises retrieves all the exercise's Exercises with an executor via category_id column.
 func (o *ExerciseCategory) CategoryExercises(mods ...qm.QueryMod) exerciseQuery {
 	var queryMods []qm.QueryMod
@@ -544,6 +573,126 @@ func (o *ExerciseCategory) CategoryExercises(mods ...qm.QueryMod) exerciseQuery 
 	)
 
 	return Exercises(queryMods...)
+}
+
+// LoadUser allows an eager lookup of values, cached into the
+// loaded structs of the objects. This is for an N-1 relationship.
+func (exerciseCategoryL) LoadUser(ctx context.Context, e boil.ContextExecutor, singular bool, maybeExerciseCategory interface{}, mods queries.Applicator) error {
+	var slice []*ExerciseCategory
+	var object *ExerciseCategory
+
+	if singular {
+		var ok bool
+		object, ok = maybeExerciseCategory.(*ExerciseCategory)
+		if !ok {
+			object = new(ExerciseCategory)
+			ok = queries.SetFromEmbeddedStruct(&object, &maybeExerciseCategory)
+			if !ok {
+				return errors.New(fmt.Sprintf("failed to set %T from embedded struct %T", object, maybeExerciseCategory))
+			}
+		}
+	} else {
+		s, ok := maybeExerciseCategory.(*[]*ExerciseCategory)
+		if ok {
+			slice = *s
+		} else {
+			ok = queries.SetFromEmbeddedStruct(&slice, maybeExerciseCategory)
+			if !ok {
+				return errors.New(fmt.Sprintf("failed to set %T from embedded struct %T", slice, maybeExerciseCategory))
+			}
+		}
+	}
+
+	args := make([]interface{}, 0, 1)
+	if singular {
+		if object.R == nil {
+			object.R = &exerciseCategoryR{}
+		}
+		args = append(args, object.UserID)
+
+	} else {
+	Outer:
+		for _, obj := range slice {
+			if obj.R == nil {
+				obj.R = &exerciseCategoryR{}
+			}
+
+			for _, a := range args {
+				if a == obj.UserID {
+					continue Outer
+				}
+			}
+
+			args = append(args, obj.UserID)
+
+		}
+	}
+
+	if len(args) == 0 {
+		return nil
+	}
+
+	query := NewQuery(
+		qm.From(`users`),
+		qm.WhereIn(`users.id in ?`, args...),
+	)
+	if mods != nil {
+		mods.Apply(query)
+	}
+
+	results, err := query.QueryContext(ctx, e)
+	if err != nil {
+		return errors.Wrap(err, "failed to eager load User")
+	}
+
+	var resultSlice []*User
+	if err = queries.Bind(results, &resultSlice); err != nil {
+		return errors.Wrap(err, "failed to bind eager loaded slice User")
+	}
+
+	if err = results.Close(); err != nil {
+		return errors.Wrap(err, "failed to close results of eager load for users")
+	}
+	if err = results.Err(); err != nil {
+		return errors.Wrap(err, "error occurred during iteration of eager loaded relations for users")
+	}
+
+	if len(userAfterSelectHooks) != 0 {
+		for _, obj := range resultSlice {
+			if err := obj.doAfterSelectHooks(ctx, e); err != nil {
+				return err
+			}
+		}
+	}
+
+	if len(resultSlice) == 0 {
+		return nil
+	}
+
+	if singular {
+		foreign := resultSlice[0]
+		object.R.User = foreign
+		if foreign.R == nil {
+			foreign.R = &userR{}
+		}
+		foreign.R.ExerciseCategories = append(foreign.R.ExerciseCategories, object)
+		return nil
+	}
+
+	for _, local := range slice {
+		for _, foreign := range resultSlice {
+			if local.UserID == foreign.ID {
+				local.R.User = foreign
+				if foreign.R == nil {
+					foreign.R = &userR{}
+				}
+				foreign.R.ExerciseCategories = append(foreign.R.ExerciseCategories, local)
+				break
+			}
+		}
+	}
+
+	return nil
 }
 
 // LoadCategoryExercises allows an eager lookup of values, cached into the
@@ -655,6 +804,53 @@ func (exerciseCategoryL) LoadCategoryExercises(ctx context.Context, e boil.Conte
 				break
 			}
 		}
+	}
+
+	return nil
+}
+
+// SetUser of the exerciseCategory to the related item.
+// Sets o.R.User to related.
+// Adds o to related.R.ExerciseCategories.
+func (o *ExerciseCategory) SetUser(ctx context.Context, exec boil.ContextExecutor, insert bool, related *User) error {
+	var err error
+	if insert {
+		if err = related.Insert(ctx, exec, boil.Infer()); err != nil {
+			return errors.Wrap(err, "failed to insert into foreign table")
+		}
+	}
+
+	updateQuery := fmt.Sprintf(
+		"UPDATE `exercise_categories` SET %s WHERE %s",
+		strmangle.SetParamNames("`", "`", 0, []string{"user_id"}),
+		strmangle.WhereClause("`", "`", 0, exerciseCategoryPrimaryKeyColumns),
+	)
+	values := []interface{}{related.ID, o.ID}
+
+	if boil.IsDebug(ctx) {
+		writer := boil.DebugWriterFrom(ctx)
+		fmt.Fprintln(writer, updateQuery)
+		fmt.Fprintln(writer, values)
+	}
+	if _, err = exec.ExecContext(ctx, updateQuery, values...); err != nil {
+		return errors.Wrap(err, "failed to update local table")
+	}
+
+	o.UserID = related.ID
+	if o.R == nil {
+		o.R = &exerciseCategoryR{
+			User: related,
+		}
+	} else {
+		o.R.User = related
+	}
+
+	if related.R == nil {
+		related.R = &userR{
+			ExerciseCategories: ExerciseCategorySlice{o},
+		}
+	} else {
+		related.R.ExerciseCategories = append(related.R.ExerciseCategories, o)
 	}
 
 	return nil

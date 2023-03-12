@@ -22,7 +22,7 @@ var _ auth.UseCase = &UseCaseMock{}
 //		// make and configure a mocked auth.UseCase
 //		mockedUseCase := &UseCaseMock{
 //			GetByIDFunc: func(ctx context.Context, uuid string) (*models.User, error) {
-//				panic("mock out the GetByID method")
+//				panic("mock out the GetByUUID method")
 //			},
 //			GetUsersFunc: func(ctx context.Context, req *utils.PaginationRequest) (*models.UsersList, error) {
 //				panic("mock out the GetUsers method")
@@ -92,7 +92,7 @@ type UseCaseMock struct {
 // GetByID calls GetByIDFunc.
 func (mock *UseCaseMock) GetByID(ctx context.Context, uuid string) (*models.User, error) {
 	if mock.GetByIDFunc == nil {
-		panic("UseCaseMock.GetByIDFunc: method is nil but UseCase.GetByID was just called")
+		panic("UseCaseMock.GetByIDFunc: method is nil but UseCase.GetByUUID was just called")
 	}
 	callInfo := struct {
 		Ctx  context.Context

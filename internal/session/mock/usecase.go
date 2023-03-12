@@ -27,7 +27,7 @@ var _ session.UseCase = &UseCaseMock{}
 //				panic("mock out the DeleteByID method")
 //			},
 //			GetByIDFunc: func(ctx context.Context, id string) (*models.Session, error) {
-//				panic("mock out the GetByID method")
+//				panic("mock out the GetByUUID method")
 //			},
 //		}
 //
@@ -155,7 +155,7 @@ func (mock *UseCaseMock) DeleteByIDCalls() []struct {
 // GetByID calls GetByIDFunc.
 func (mock *UseCaseMock) GetByID(ctx context.Context, id string) (*models.Session, error) {
 	if mock.GetByIDFunc == nil {
-		panic("UseCaseMock.GetByIDFunc: method is nil but UseCase.GetByID was just called")
+		panic("UseCaseMock.GetByIDFunc: method is nil but UseCase.GetByUUID was just called")
 	}
 	callInfo := struct {
 		Ctx context.Context

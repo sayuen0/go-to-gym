@@ -109,21 +109,21 @@ func (u *authUC) GetUsers(ctx context.Context, req *utils.PaginationRequest) (*m
 func (u *authUC) GetByID(ctx context.Context, userID string) (*models.User, error) {
 	cachedUser, err := u.redisRepo.GetByID(ctx, userID)
 	if err != nil {
-		u.lg.Error("authUC.GetByID.redisRepo.GetByID", logger.Error(err))
+		u.lg.Error("authUC.GetByUUID.redisRepo.GetByUUID", logger.Error(err))
 	}
 
 	if cachedUser != nil {
 		return cachedUser, nil
 	}
 
-	user, err := u.authRepo.GetByID(ctx, userID)
+	user, err := u.authRepo.GetByUUID(ctx, userID)
 	if err != nil {
 		return nil, err
 	}
 
 	userModel := models.NewUser(user)
 	if err := u.redisRepo.SetUser(ctx, userID, cacheDuration, userModel); err != nil {
-		u.lg.Error("authUC.GetByID.SetUser", logger.Error(err))
+		u.lg.Error("authUC.GetByUUID.SetUser", logger.Error(err))
 	}
 
 	return userModel, nil
