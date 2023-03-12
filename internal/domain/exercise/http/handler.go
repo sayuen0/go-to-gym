@@ -56,8 +56,25 @@ func (h *exerciseHandlers) Create() gin.HandlerFunc {
 }
 
 func (h *exerciseHandlers) List() gin.HandlerFunc {
-	//TODO implement me
-	panic("implement me")
+	return func(c *gin.Context) {
+		ctx := c.Request.Context()
+
+		user, err := utils.GetLoginUser(c)
+		if err != nil {
+			utils.LogResponseError(c, h.lg, err)
+			c.JSON(httperrors.ErrorResponse(err))
+			return
+		}
+
+		exercises, err := h.uc.GetByUserID(ctx, user.UserID)
+		if err != nil {
+			utils.LogResponseError(c, h.lg, err)
+			c.JSON(httperrors.ErrorResponse(err))
+			return
+		}
+
+		c.JSON(http.StatusOK, exercises)
+	}
 }
 
 func (h *exerciseHandlers) Get() gin.HandlerFunc {

@@ -56,3 +56,8 @@ func (rp *exerciseRepo) Create(
 func (rp *exerciseRepo) GetByCategoryAndName(ctx context.Context, categoryID int, name string) (*db.Exercise, error) {
 	return db.Exercises(qm.Where("category_id = ? and name = ?", categoryID, name)).One(ctx, rp.db)
 }
+
+// GetByUserID returns exercises by user id
+func (rp *exerciseRepo) GetByUserID(ctx context.Context, userID int) ([]*db.Exercise, error) {
+	return db.Exercises(qm.Where("user_id = ? ", userID)).All(ctx, rp.db)
+}

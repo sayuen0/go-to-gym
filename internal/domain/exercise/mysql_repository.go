@@ -9,4 +9,5 @@ import (
 type Repository interface {
 	Create(ctx context.Context, req *models.ExerciseCreateRequest, userID int) (*db.Exercise, error)
 	GetByCategoryAndName(ctx context.Context, CategoryID int, name string) (*db.Exercise, error)
+	GetByUserID(ctx context.Context, id int) ([]*db.Exercise, error)
 }

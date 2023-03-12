@@ -8,8 +8,8 @@ type Handlers interface {
 	// Create handles a POST request for creating a new item.
 	Create() gin.HandlerFunc
 
-	//// List handles a GET request for listing all items.
-	//List() gin.HandlerFunc
+	// List handles a GET request for listing all items.
+	List() gin.HandlerFunc
 	//
 	//// Get handles a GET request for getting a specific item.
 	//Get() gin.HandlerFunc

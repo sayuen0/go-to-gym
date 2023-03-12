@@ -11,7 +11,6 @@ import (
 	"github.com/sayuen0/go-to-gym/internal/infrastructure/logger"
 	"github.com/sayuen0/go-to-gym/internal/models"
 	"github.com/sayuen0/go-to-gym/pkg/httperrors"
-	"github.com/sayuen0/go-to-gym/pkg/utils"
 )
 
 type exerciseUC struct {
@@ -75,9 +74,20 @@ func (uc *exerciseUC) PrepareForCreate(ctx context.Context, req *models.Exercise
 	return nil
 }
 
-func (uc *exerciseUC) List(ctx context.Context, req *utils.PaginationRequest) (*models.ExercisesList, error) {
-	//TODO implement me
-	panic("implement me")
+func (uc *exerciseUC) GetByUserID(ctx context.Context, userUUID string) (*models.ExercisesList, error) {
+	user, err := uc.authRepo.GetByUUID(ctx, userUUID)
+	if err != nil {
+		uc.lg.Error("get user", logger.Error(err), logger.String("user_id", user.UserID))
+		return nil, httperrors.InternalServerError(err)
+	}
+
+	exercises, err := uc.repo.GetByUserID(ctx, user.ID)
+	if err != nil {
+		uc.lg.Error("get exercises", logger.Error(err), logger.String("user_id", user.UserID))
+		return nil, httperrors.InternalServerError(err)
+	}
+
+	return models.NewExercisesList(exercises), nil
 }
 
 func (uc *exerciseUC) Get(ctx context.Context, id int64) (*models.Exercise, error) {
